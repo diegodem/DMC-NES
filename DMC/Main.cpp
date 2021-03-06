@@ -7,7 +7,9 @@
 #include "Player.h"
 #include "Timer.h"
 #include "Projectile.h"
+#include "Enemy.h"
 #include "State.h"
+#include "Kirzos.h"
 
 const int SCREEN_WIDTH = 1024;
 const int SCREEN_HEIGHT = 896;
@@ -31,9 +33,13 @@ SDL_Texture* gTexturePlayer[6] = { 0 };
 
 SDL_Texture* gTextureProj[2] = { 0 };
 
-Player p1 = Player();
+SDL_Texture* gTextureEnemies[2] = { 0 };
+
+Player p1;
 
 std::vector<Projectile> projectiles;
+
+std::vector<Enemy> enemies;
 
 Timer deltaTime;
 
@@ -42,6 +48,9 @@ bool init()
 	//Initialization flag
 	bool success = true;
 
+	p1 = Player();
+
+	enemies.push_back(Kirzos());
 
 	//Initialize SDL
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
@@ -94,42 +103,42 @@ bool loadMedia()
 	bool success = true;
 
 	//Load PNG texture
-	gTexturePlayer[0] = loadTexture("Sprites/Dante_gun_r.png");
+	gTexturePlayer[0] = loadTexture("Sprites/alig_gun_r.png");
 	if (gTexturePlayer[0] == NULL)
 	{
 		printf("Failed to load texture image!\n");
 		success = false;
 	}
 
-	gTexturePlayer[1] = loadTexture("Sprites/Dante_gun_r2.png");
+	gTexturePlayer[1] = loadTexture("Sprites/alig_gun_r2.png");
 	if (gTexturePlayer[1] == NULL)
 	{
 		printf("Failed to load texture image!\n");
 		success = false;
 	}
 
-	gTexturePlayer[2] = loadTexture("Sprites/Dante_gun_l.png");
+	gTexturePlayer[2] = loadTexture("Sprites/alig_gun_l.png");
 	if (gTexturePlayer[2] == NULL)
 	{
 		printf("Failed to load texture image!\n");
 		success = false;
 	}
 
-	gTexturePlayer[3] = loadTexture("Sprites/Dante_gun_l2.png");
+	gTexturePlayer[3] = loadTexture("Sprites/alig_gun_l2.png");
 	if (gTexturePlayer[3] == NULL)
 	{
 		printf("Failed to load texture image!\n");
 		success = false;
 	}
 
-	gTexturePlayer[4] = loadTexture("Sprites/Dante_sword_attack_r.png");
+	gTexturePlayer[4] = loadTexture("Sprites/alig_sword_attack_r.png");
 	if (gTexturePlayer[4] == NULL)
 	{
 		printf("Failed to load texture image!\n");
 		success = false;
 	}
 
-	gTexturePlayer[5] = loadTexture("Sprites/Dante_sword_attack_l.png");
+	gTexturePlayer[5] = loadTexture("Sprites/alig_sword_attack_l.png");
 	if (gTexturePlayer[5] == NULL)
 	{
 		printf("Failed to load texture image!\n");
@@ -144,6 +153,20 @@ bool loadMedia()
 	}
 
 	gTextureProj[1] = loadTexture("Sprites/proj_r.png");
+	if (gTextureProj[1] == NULL)
+	{
+		printf("Failed to load texture image!\n");
+		success = false;
+	}
+
+	gTextureEnemies[0] = loadTexture("Sprites/kirzos_l.png");
+	if (gTextureProj[0] == NULL)
+	{
+		printf("Failed to load texture image!\n");
+		success = false;
+	}
+
+	gTextureEnemies[1] = loadTexture("Sprites/kirzos_l2.png");
 	if (gTextureProj[1] == NULL)
 	{
 		printf("Failed to load texture image!\n");
@@ -274,6 +297,13 @@ int main(int argc, char* args[])
 				{
 					projectiles[i].update(deltaTime.getTime());
 					SDL_RenderCopy(gRenderer, gTextureProj[projectiles[i].getFrame()], NULL, projectiles[i].getRect());
+				}
+				for (int i = 0; i < enemies.size(); i++)
+				{
+					enemies[i].update(deltaTime.getTime());
+					SDL_RenderCopy(gRenderer, gTextureEnemies[enemies[i].getCurrentFrame()], NULL, enemies[i].getRect());
+					//SDL_SetRenderDrawColor(gRenderer, 0xFF, 0x00, 0x00, 0xFF);
+					//SDL_RenderFillRect(gRenderer, enemies[i].getRect());
 				}
 				if (p1.getCurrentFrame() > 3)
 				{
