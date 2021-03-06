@@ -122,3 +122,8 @@ int Player::getCurrentFrame()
 {
 	return currentFrame;
 }
+
+State Player::getState()
+{
+	return state;
+}

@@ -18,6 +18,7 @@ public:
 	SDL_Rect *getRect();
 	SDL_Rect *getAttackRect();
 	int getCurrentFrame();
+	State getState();
 
 private:
 

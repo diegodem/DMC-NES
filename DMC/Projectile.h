@@ -4,11 +4,14 @@
 class Projectile
 {
 public:
-	Projectile();
-	void update();
+	Projectile(int x, int direction);
+	void update(float deltaTime);
 	SDL_Rect* getRect();
+	Projectile* getProjectile();
+	int getFrame();
 private:
-	float speed;
+	int speed;
+	int frame;
 	SDL_Rect rect;
 
 };

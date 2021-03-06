@@ -3,8 +3,11 @@
 #include <stdio.h>
 #include <string>
 #include <cmath>
+#include <vector>
 #include "Player.h"
 #include "Timer.h"
+#include "Projectile.h"
+#include "State.h"
 
 const int SCREEN_WIDTH = 1024;
 const int SCREEN_HEIGHT = 896;
@@ -26,7 +29,11 @@ SDL_Renderer *gRenderer = NULL;
 
 SDL_Texture* gTexturePlayer[6] = { 0 };
 
+SDL_Texture* gTextureProj[2] = { 0 };
+
 Player p1 = Player();
+
+std::vector<Projectile> projectiles;
 
 Timer deltaTime;
 
@@ -129,6 +136,20 @@ bool loadMedia()
 		success = false;
 	}
 
+	gTextureProj[0] = loadTexture("Sprites/proj_l.png");
+	if (gTextureProj[0] == NULL)
+	{
+		printf("Failed to load texture image!\n");
+		success = false;
+	}
+
+	gTextureProj[1] = loadTexture("Sprites/proj_r.png");
+	if (gTextureProj[1] == NULL)
+	{
+		printf("Failed to load texture image!\n");
+		success = false;
+	}
+
 	return success;
 }
 
@@ -217,7 +238,17 @@ int main(int argc, char* args[])
 				}
 				else if (currentKeyStates[SDL_SCANCODE_X])
 				{
+					if (p1.getState() == STANDING_RIGHT || p1.getState() == MOVING_RIGHT)
+					{
+						projectiles.push_back(Projectile(p1.getRect()->x, 1));
+					}
+					else if (p1.getState() == STANDING_LEFT || p1.getState() == MOVING_LEFT)
+					{
+						projectiles.push_back(Projectile(p1.getRect()->x, 0));
+					}
 					p1.fire();
+
+					
 				}
 				else if (currentKeyStates[SDL_SCANCODE_LEFT])
 				{
@@ -231,17 +262,19 @@ int main(int argc, char* args[])
 				{
 					p1.noButtonPressed();
 				}
-				if (deltaTime.getTime() >= 1.f / 100.f)
-				{
-					deltaTime.start();
-				}
+				
 
 				//Clear screen
-				SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
+				SDL_SetRenderDrawColor(gRenderer, 0x88, 0x88, 0x88, 0x88);
 				SDL_RenderClear(gRenderer);
 
 				//SDL_SetRenderDrawColor(gRenderer, 0xFF, 0x00, 0x00, 0xFF);
-				SDL_RenderFillRect(gRenderer, p1.getAttackRect());
+				//SDL_RenderFillRect(gRenderer, p1.getAttackRect());
+				for (int i = 0; i < projectiles.size(); i++)
+				{
+					projectiles[i].update(deltaTime.getTime());
+					SDL_RenderCopy(gRenderer, gTextureProj[projectiles[i].getFrame()], NULL, projectiles[i].getRect());
+				}
 				if (p1.getCurrentFrame() > 3)
 				{
 					SDL_RenderCopy(gRenderer, gTexturePlayer[p1.getCurrentFrame()], NULL, p1.getAttackRect());
@@ -249,6 +282,10 @@ int main(int argc, char* args[])
 				else
 				{
 					SDL_RenderCopy(gRenderer, gTexturePlayer[p1.getCurrentFrame()], NULL, p1.getRect());
+				}
+				if (deltaTime.getTime() >= 1.f / 100.f)
+				{
+					deltaTime.start();
 				}
 				
 
