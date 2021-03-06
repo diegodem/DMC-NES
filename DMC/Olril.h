@@ -3,8 +3,8 @@
 
 
 
-class Kirzos : public Enemy
+class Olril : public Enemy
 {
 public:
-	Kirzos();
+	Olril();
 };

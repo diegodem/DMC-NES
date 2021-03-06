@@ -148,17 +148,46 @@
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Kirzos.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Olril.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="Unnath.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Enemy.h" />
+    <ClInclude Include="Olril.h" />
     <ClInclude Include="Kirzos.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Projectile.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="Timer.h" />
+    <ClInclude Include="Unnath.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Sprites\alig_gun_l.png" />
+    <Image Include="Sprites\alig_gun_l2.png" />
+    <Image Include="Sprites\alig_gun_r.png" />
+    <Image Include="Sprites\alig_gun_r2.png" />
+    <Image Include="Sprites\alig_sword_attack_l.png" />
+    <Image Include="Sprites\alig_sword_attack_r.png" />
+    <Image Include="Sprites\Dante_sword.png" />
+    <Image Include="Sprites\Dante_sword_outline.png" />
+    <Image Include="Sprites\Dante_sword_outline2.png" />
+    <Image Include="Sprites\Dante_sword_outline3.png" />
+    <Image Include="Sprites\Dante_sword_outline4.png" />
+    <Image Include="Sprites\kirzos_l.png" />
+    <Image Include="Sprites\kirzos_l2.png" />
+    <Image Include="Sprites\kirzos_r.png" />
+    <Image Include="Sprites\kirzos_r2.png" />
+    <Image Include="Sprites\olril_l.png" />
+    <Image Include="Sprites\olril_l2.png" />
+    <Image Include="Sprites\olril_r.png" />
+    <Image Include="Sprites\olril_r2.png" />
+    <Image Include="Sprites\proj_l.png" />
+    <Image Include="Sprites\proj_r.png" />
+    <Image Include="Sprites\unnath_l.png" />
+    <Image Include="Sprites\unnath_r.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

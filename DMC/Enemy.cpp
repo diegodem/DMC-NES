@@ -31,19 +31,22 @@ void Enemy::moveRect(int x)
 {
 	rect.x -= x;
 }
-
-void Enemy::setCurrentFrame(int frame)
+void Enemy::setFrames(int f1, int f2)
 {
-	currentFrame = frame;
+	frames[0] = f1;
+	frames[1] = f2;
+	currentFrame = frames[0];
 }
 
 void Enemy::update(float deltaTime)
 {
 
-	moveRect((int)(100.f * deltaTime));
+	moveRect((int)(60.f * deltaTime) * speed);
 	if (getFrameTimer() > 0.2)
 	{
-		(getCurrentFrame() == 0) ? setCurrentFrame(1) : setCurrentFrame(0);
+		//(getCurrentFrame() == 0) ? setCurrentFrame(1) : setCurrentFrame(0);
+		(currentFrame == frames[0]) ? currentFrame = frames[1] : currentFrame = frames[0];
+
 		startFrameTimer();
 	}
 

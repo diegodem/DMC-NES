@@ -1,10 +1,8 @@
 #pragma once
 #include "Enemy.h"
 
-
-
-class Kirzos : public Enemy
+class Unnath : public Enemy
 {
 public:
-	Kirzos();
+	Unnath();
 };

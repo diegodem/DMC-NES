@@ -29,7 +29,7 @@ void Player::update()
 
 void Player::moveLeft(float deltaTime)
 {
-	rect.x -= (int)(100.f * deltaTime);
+	rect.x -= (int)(60.f * deltaTime) * 2;
 	attackRect.x = rect.x - 16;
 	if (state != MOVING_LEFT)
 	{
@@ -47,7 +47,7 @@ void Player::moveLeft(float deltaTime)
 
 void Player::moveRight(float deltaTime)
 {
-	rect.x += (int)(100.f * deltaTime);
+	rect.x += (int)(60.f * deltaTime) * 2;
 	attackRect.x = rect.x;
 	if (state != MOVING_RIGHT)
 	{

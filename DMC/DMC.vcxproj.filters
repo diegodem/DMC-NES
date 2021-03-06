@@ -33,6 +33,12 @@
     <ClCompile Include="Kirzos.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
+    <ClCompile Include="Olril.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="Unnath.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Player.h">
@@ -53,5 +59,82 @@
     <ClInclude Include="Kirzos.h">
       <Filter>Archivos de origen</Filter>
     </ClInclude>
+    <ClInclude Include="Olril.h">
+      <Filter>Archivos de origen</Filter>
+    </ClInclude>
+    <ClInclude Include="Unnath.h">
+      <Filter>Archivos de origen</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Sprites\alig_gun_l.png">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="Sprites\alig_gun_l2.png">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="Sprites\alig_gun_r.png">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="Sprites\alig_gun_r2.png">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="Sprites\alig_sword_attack_l.png">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="Sprites\alig_sword_attack_r.png">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="Sprites\Dante_sword.png">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="Sprites\Dante_sword_outline.png">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="Sprites\Dante_sword_outline2.png">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="Sprites\Dante_sword_outline3.png">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="Sprites\Dante_sword_outline4.png">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="Sprites\kirzos_l.png">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="Sprites\kirzos_l2.png">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="Sprites\kirzos_r.png">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="Sprites\kirzos_r2.png">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="Sprites\olril_l.png">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="Sprites\olril_l2.png">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="Sprites\olril_r.png">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="Sprites\olril_r2.png">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="Sprites\proj_l.png">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="Sprites\proj_r.png">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="Sprites\unnath_l.png">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="Sprites\unnath_r.png">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
   </ItemGroup>
 </Project>

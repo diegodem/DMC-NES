@@ -1,9 +1,9 @@
-#include "Kirzos.h"
+#include "Olril.h"
 
-Kirzos::Kirzos()
+Olril::Olril()
 {
 	initializeRect(250, 160);
 	startFrameTimer();
-	setFrames(0, 1);
+	setFrames(2, 3);
 	speed = 1;
 }

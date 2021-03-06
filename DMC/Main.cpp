@@ -10,6 +10,8 @@
 #include "Enemy.h"
 #include "State.h"
 #include "Kirzos.h"
+#include "Olril.h"
+#include "Unnath.h"
 
 const int SCREEN_WIDTH = 1024;
 const int SCREEN_HEIGHT = 896;
@@ -33,7 +35,7 @@ SDL_Texture* gTexturePlayer[6] = { 0 };
 
 SDL_Texture* gTextureProj[2] = { 0 };
 
-SDL_Texture* gTextureEnemies[2] = { 0 };
+SDL_Texture* gTextureEnemies[5] = { 0 };
 
 Player p1;
 
@@ -50,7 +52,7 @@ bool init()
 
 	p1 = Player();
 
-	enemies.push_back(Kirzos());
+	enemies.push_back(Unnath());
 
 	//Initialize SDL
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
@@ -160,14 +162,35 @@ bool loadMedia()
 	}
 
 	gTextureEnemies[0] = loadTexture("Sprites/kirzos_l.png");
-	if (gTextureProj[0] == NULL)
+	if (gTextureEnemies[0] == NULL)
 	{
 		printf("Failed to load texture image!\n");
 		success = false;
 	}
 
 	gTextureEnemies[1] = loadTexture("Sprites/kirzos_l2.png");
-	if (gTextureProj[1] == NULL)
+	if (gTextureEnemies[1] == NULL)
+	{
+		printf("Failed to load texture image!\n");
+		success = false;
+	}
+
+	gTextureEnemies[2] = loadTexture("Sprites/olril_l.png");
+	if (gTextureEnemies[2] == NULL)
+	{
+		printf("Failed to load texture image!\n");
+		success = false;
+	}
+
+	gTextureEnemies[3] = loadTexture("Sprites/olril_l2.png");
+	if (gTextureEnemies[3] == NULL)
+	{
+		printf("Failed to load texture image!\n");
+		success = false;
+	}
+
+	gTextureEnemies[4] = loadTexture("Sprites/unnath_l.png");
+	if (gTextureEnemies[4] == NULL)
 	{
 		printf("Failed to load texture image!\n");
 		success = false;
@@ -313,7 +336,7 @@ int main(int argc, char* args[])
 				{
 					SDL_RenderCopy(gRenderer, gTexturePlayer[p1.getCurrentFrame()], NULL, p1.getRect());
 				}
-				if (deltaTime.getTime() >= 1.f / 100.f)
+				if (deltaTime.getTime() >= 1.f / 60.f)
 				{
 					deltaTime.start();
 				}
