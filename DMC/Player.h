@@ -17,18 +17,23 @@ public:
 	void noButtonPressed();
 	SDL_Rect *getRect();
 	SDL_Rect *getAttackRect();
+	SDL_Rect* getSwordRect();
 	int getCurrentFrame();
 	State getState();
+	int getSwordDamage();
 
 private:
 
 	SDL_Rect rect;
 	SDL_Rect attackRect;
+	SDL_Rect swordRect;
 	
 	State state;
 
 	Timer frameTimer;
 
 	int currentFrame;
+
+	int swordDamage;
 
 };

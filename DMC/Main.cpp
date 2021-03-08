@@ -25,6 +25,8 @@ void close();
 
 bool loadMedia();
 
+static bool checkCollision(SDL_Rect *rectA, SDL_Rect *rectB);
+
 SDL_Texture *loadTexture(std::string path);
 
 SDL_Window *gWindow = NULL;
@@ -45,6 +47,8 @@ std::vector<Enemy> enemies;
 
 Timer deltaTime;
 
+int i, j;
+
 bool init()
 {
 	//Initialization flag
@@ -52,7 +56,7 @@ bool init()
 
 	p1 = Player();
 
-	enemies.push_back(Unnath());
+	enemies.push_back(Kirzos());
 
 	//Initialize SDL
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
@@ -239,6 +243,51 @@ void close()
 	SDL_Quit();
 }
 
+static bool checkCollision(SDL_Rect *rectA, SDL_Rect *rectB)
+{
+	//The sides of the rectangles
+	int leftA, leftB;
+	int rightA, rightB;
+	int topA, topB;
+	int bottomA, bottomB;
+
+	//Calculate the sides of rect A
+	leftA = rectA->x;
+	rightA = rectA->x + rectA->w;
+	topA = rectA->y;
+	bottomA = rectA->y + rectA->h;
+
+	//Calculate the sides of rect B
+	leftB = rectB->x;
+	rightB = rectB->x + rectB->w;
+	topB = rectB->y;
+	bottomB = rectB->y + rectB->h;
+
+	//If any of the sides from A are outside of B
+	if (bottomA <= topB)
+	{
+		return false;
+	}
+
+	if (topA >= bottomB)
+	{
+		return false;
+	}
+
+	if (rightA <= leftB)
+	{
+		return false;
+	}
+
+	if (leftA >= rightB)
+	{
+		return false;
+	}
+
+	//If none of the sides from A are outside B
+	return true;
+}
+
 int main(int argc, char* args[])
 {
 	//Start up SDL and create window
@@ -281,6 +330,18 @@ int main(int argc, char* args[])
 				if (currentKeyStates[SDL_SCANCODE_Z])
 				{
 					p1.attackSword();
+					for (i = 0; i < enemies.size(); i++)
+					{
+						if (checkCollision(p1.getSwordRect(), enemies[i].getRect()))
+						{
+							enemies[i].takeDamage(p1.getSwordDamage());
+							if (enemies[i].getHealth() <= 0)
+							{
+								enemies.erase(enemies.begin() + i);
+								i--;
+							}
+						}
+					}
 				}
 				else if (currentKeyStates[SDL_SCANCODE_X])
 				{
@@ -315,13 +376,33 @@ int main(int argc, char* args[])
 				SDL_RenderClear(gRenderer);
 
 				//SDL_SetRenderDrawColor(gRenderer, 0xFF, 0x00, 0x00, 0xFF);
-				//SDL_RenderFillRect(gRenderer, p1.getAttackRect());
-				for (int i = 0; i < projectiles.size(); i++)
+				//SDL_RenderFillRect(gRenderer, p1.getSwordRect());
+				for (i = 0; i < projectiles.size(); i++)
 				{
 					projectiles[i].update(deltaTime.getTime());
 					SDL_RenderCopy(gRenderer, gTextureProj[projectiles[i].getFrame()], NULL, projectiles[i].getRect());
+					for (j = 0; j < enemies.size(); j++)
+					{
+						if (checkCollision(projectiles[i].getRect(), enemies[j].getRect()))
+						{
+							enemies[j].takeDamage(50);
+							break;
+							
+						}
+						
+					}
+					//printf("%d", j);
+					if (j < enemies.size())
+					{
+						projectiles.erase(projectiles.begin() + i);
+						i--;
+						if (enemies[j].getHealth() <= 0)
+						{
+							enemies.erase(enemies.begin() + j);
+						}
+					}
 				}
-				for (int i = 0; i < enemies.size(); i++)
+				for (i = 0; i < enemies.size(); i++)
 				{
 					enemies[i].update(deltaTime.getTime());
 					SDL_RenderCopy(gRenderer, gTextureEnemies[enemies[i].getCurrentFrame()], NULL, enemies[i].getRect());

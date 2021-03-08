@@ -51,3 +51,13 @@ void Enemy::update(float deltaTime)
 	}
 
 }
+
+void Enemy::takeDamage(int damage)
+{
+	health -= damage;
+}
+
+int Enemy::getHealth()
+{
+	return health;
+}

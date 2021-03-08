@@ -6,4 +6,5 @@ Kirzos::Kirzos()
 	startFrameTimer();
 	setFrames(0, 1);
 	speed = 1;
+	health = 100;
 }

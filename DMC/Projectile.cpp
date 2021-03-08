@@ -8,11 +8,11 @@ Projectile::Projectile(int x, int direction)
 	if (direction == 1)
 	{
 		speed = 2;
-		rect = { x + 11, 166, 8, 8 };
+		rect = { x + 12, 168, 5, 4 };
 	}
 	else
 	{
-		rect = { x - 3, 166, 8, 8 };
+		rect = { x - 1, 168, 5, 4 };
 		speed = - 2;
 	}
 	

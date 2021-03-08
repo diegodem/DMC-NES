@@ -10,6 +10,9 @@ Player::Player()
 	currentFrame = 0;
 	rect = { 10, 160, 16, 32 };
 	attackRect = { rect.x, rect.y, 32, 32 };
+	swordRect = { rect.x + 24, rect.y + 8, 8, 8 };
+	frameTimer.start();
+	swordDamage = 100;
 	state = STANDING_RIGHT;
 }
 
@@ -31,11 +34,12 @@ void Player::moveLeft(float deltaTime)
 {
 	rect.x -= (int)(60.f * deltaTime) * 2;
 	attackRect.x = rect.x - 16;
+	swordRect.x = attackRect.x;
 	if (state != MOVING_LEFT)
 	{
 		state = MOVING_LEFT;
 		frameTimer.start();
-		currentFrame = 2;
+		currentFrame = 3;
 	}
 	else if (frameTimer.getTime() > 0.2)
 	{
@@ -49,11 +53,12 @@ void Player::moveRight(float deltaTime)
 {
 	rect.x += (int)(60.f * deltaTime) * 2;
 	attackRect.x = rect.x;
+	swordRect.x = rect.x + 24;
 	if (state != MOVING_RIGHT)
 	{
 		state = MOVING_RIGHT;
 		frameTimer.start();
-		currentFrame = 0;
+		currentFrame = 1;
 	}
 	else if (frameTimer.getTime() > 0.2f)
 	{
@@ -98,13 +103,23 @@ void Player::fire()
 
 void Player::noButtonPressed()
 {
-	if (state == AFTER_ATTACK_RIGHT)
+	if (state == MOVING_RIGHT)
+	{
+		currentFrame = 0;
+	}
+	else if (state == MOVING_LEFT)
+	{
+		currentFrame = 2;
+	}
+	else if (state == AFTER_ATTACK_RIGHT)
 	{
 		state = STANDING_RIGHT;
+		
 	}
 	else if (state == AFTER_ATTACK_LEFT)
 	{
 		state = STANDING_LEFT;
+		
 	}
 }
 
@@ -118,6 +133,11 @@ SDL_Rect* Player::getAttackRect()
 	return &attackRect;
 }
 
+SDL_Rect* Player::getSwordRect()
+{
+	return &swordRect;
+}
+
 int Player::getCurrentFrame()
 {
 	return currentFrame;
@@ -126,4 +146,9 @@ int Player::getCurrentFrame()
 State Player::getState()
 {
 	return state;
+}
+
+int Player::getSwordDamage()
+{
+	return swordDamage;
 }

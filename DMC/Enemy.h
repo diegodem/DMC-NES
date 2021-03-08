@@ -13,8 +13,11 @@ public:
 	float getFrameTimer();
 	int getCurrentFrame();
 	void moveRect(int x);
+	void takeDamage(int damage);
+	int getHealth();
 protected:
 	int speed = 1;
+	int health = 100;
 private:
 	SDL_Rect rect;
 	Timer frameTimer;
