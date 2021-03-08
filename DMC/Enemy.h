@@ -15,6 +15,7 @@ public:
 	void moveRect(int x);
 	void takeDamage(int damage);
 	int getHealth();
+	void pushBack(int pixels, int direction);
 protected:
 	int speed = 1;
 	int health = 100;

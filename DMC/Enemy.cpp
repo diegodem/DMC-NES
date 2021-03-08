@@ -61,3 +61,8 @@ int Enemy::getHealth()
 {
 	return health;
 }
+
+void Enemy::pushBack(int pixels, int direction)
+{
+	(direction == 1) ? rect.x += pixels : rect.x -= pixels;
+}

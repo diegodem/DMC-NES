@@ -12,7 +12,7 @@ public:
 	void update();
 	void moveRight(float deltaTime);
 	void moveLeft(float deltaTime);
-	void attackSword();
+	int attackSword();
 	void fire();
 	void noButtonPressed();
 	SDL_Rect *getRect();

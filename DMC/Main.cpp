@@ -56,7 +56,7 @@ bool init()
 
 	p1 = Player();
 
-	enemies.push_back(Kirzos());
+	enemies.push_back(Olril());
 
 	//Initialize SDL
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
@@ -329,19 +329,25 @@ int main(int argc, char* args[])
 				p1.update();
 				if (currentKeyStates[SDL_SCANCODE_Z])
 				{
-					p1.attackSword();
-					for (i = 0; i < enemies.size(); i++)
+					int attackResult = p1.attackSword();
+					
+					if (attackResult)
 					{
-						if (checkCollision(p1.getSwordRect(), enemies[i].getRect()))
+						for (i = 0; i < enemies.size(); i++)
 						{
-							enemies[i].takeDamage(p1.getSwordDamage());
-							if (enemies[i].getHealth() <= 0)
+							if (checkCollision(p1.getSwordRect(), enemies[i].getRect()))
 							{
-								enemies.erase(enemies.begin() + i);
-								i--;
+								enemies[i].takeDamage(p1.getSwordDamage());
+								enemies[i].pushBack(16, attackResult);
+								if (enemies[i].getHealth() <= 0)
+								{
+									enemies.erase(enemies.begin() + i);
+									i--;
+								}
 							}
 						}
 					}
+					
 				}
 				else if (currentKeyStates[SDL_SCANCODE_X])
 				{
@@ -386,6 +392,7 @@ int main(int argc, char* args[])
 						if (checkCollision(projectiles[i].getRect(), enemies[j].getRect()))
 						{
 							enemies[j].takeDamage(50);
+							(projectiles[i].getFrame() == 1) ? enemies[j].pushBack(8, 1) : enemies[j].pushBack(8, 0);
 							break;
 							
 						}

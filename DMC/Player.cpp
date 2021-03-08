@@ -10,7 +10,7 @@ Player::Player()
 	currentFrame = 0;
 	rect = { 10, 160, 16, 32 };
 	attackRect = { rect.x, rect.y, 32, 32 };
-	swordRect = { rect.x + 24, rect.y + 8, 8, 8 };
+	swordRect = { rect.x + 24, rect.y + 8, 10, 8 };
 	frameTimer.start();
 	swordDamage = 100;
 	state = STANDING_RIGHT;
@@ -33,7 +33,7 @@ void Player::update()
 void Player::moveLeft(float deltaTime)
 {
 	rect.x -= (int)(60.f * deltaTime) * 2;
-	attackRect.x = rect.x - 16;
+	attackRect.x = rect.x - 18;
 	swordRect.x = attackRect.x;
 	if (state != MOVING_LEFT)
 	{
@@ -67,22 +67,23 @@ void Player::moveRight(float deltaTime)
 	}
 }
 
-void Player::attackSword()
+int Player::attackSword()
 {
 	if (state == STANDING_RIGHT || state == MOVING_RIGHT)
 	{
 		state = ATTACKING_RIGHT;
 		frameTimer.start();
 		currentFrame = 4;
+		return 1;
 	}
 	else if (state == STANDING_LEFT || state == MOVING_LEFT)
 	{
 		state = ATTACKING_LEFT;
 		frameTimer.start();
 		currentFrame = 5;
+		return 2;
 	}
-	
-
+	return 0;
 }
 
 void Player::fire()
