@@ -7,13 +7,13 @@ Projectile::Projectile(int x, int direction)
 	frame = direction;
 	if (direction == 1)
 	{
-		speed = 2;
+		speed = 3;
 		rect = { x + 12, 168, 5, 4 };
 	}
 	else
 	{
 		rect = { x - 1, 168, 5, 4 };
-		speed = - 2;
+		speed = - 3;
 	}
 	
 }

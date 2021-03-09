@@ -21,6 +21,9 @@ public:
 	int getCurrentFrame();
 	State getState();
 	int getSwordDamage();
+	void takeDamage(int damage);
+	int getHealth();
+	int getImmunityState();
 
 private:
 
@@ -32,8 +35,15 @@ private:
 
 	Timer frameTimer;
 
+	Timer immunityTimer;
+
 	int currentFrame;
 
 	int swordDamage;
+
+	int maxHealth;
+	int health;
+
+	int immuneState;
 
 };

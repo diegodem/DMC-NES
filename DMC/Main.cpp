@@ -1,6 +1,8 @@
 #include <SDL.h>
 #include <SDL_image.h>
+#include <SDL_ttf.h>
 #include <stdio.h>
+#include <time.h>
 #include <string>
 #include <cmath>
 #include <vector>
@@ -27,17 +29,23 @@ bool loadMedia();
 
 static bool checkCollision(SDL_Rect *rectA, SDL_Rect *rectB);
 
+void gameOver(bool *quit);
+
 SDL_Texture *loadTexture(std::string path);
 
 SDL_Window *gWindow = NULL;
 
 SDL_Renderer *gRenderer = NULL;
 
+TTF_Font *gFontBig = NULL;
+
+TTF_Font* gFontMed = NULL;
+
 SDL_Texture* gTexturePlayer[6] = { 0 };
 
 SDL_Texture* gTextureProj[2] = { 0 };
 
-SDL_Texture* gTextureEnemies[5] = { 0 };
+SDL_Texture* gTextureEnemies[10] = { 0 };
 
 Player p1;
 
@@ -47,16 +55,37 @@ std::vector<Enemy> enemies;
 
 Timer deltaTime;
 
+Timer spawnTimer;
+
+int nextEnemy;
+
 int i, j;
 
 bool init()
 {
+	srand(time(NULL));
 	//Initialization flag
 	bool success = true;
 
 	p1 = Player();
 
-	enemies.push_back(Olril());
+	int randomEnemy = rand() % 10;
+
+	nextEnemy = rand() % 2 + 1;
+
+	if (randomEnemy < 5)
+	{
+		enemies.push_back(Kirzos());
+	}
+	else if (randomEnemy < 8)
+	{
+		enemies.push_back(Olril());
+	}
+	else
+	{
+		enemies.push_back(Unnath());
+	}
+
 
 	//Initialize SDL
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
@@ -94,6 +123,12 @@ bool init()
 				if (!(IMG_Init(imgFlags) & imgFlags))
 				{
 					printf("SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
+					success = false;
+				}
+
+				if (TTF_Init() == -1)
+				{
+					printf("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError());
 					success = false;
 				}
 			}
@@ -200,6 +235,44 @@ bool loadMedia()
 		success = false;
 	}
 
+	gTextureEnemies[5] = loadTexture("Sprites/kirzos_r.png");
+	if (gTextureEnemies[5] == NULL)
+	{
+		printf("Failed to load texture image!\n");
+		success = false;
+	}
+
+	gTextureEnemies[6] = loadTexture("Sprites/kirzos_r2.png");
+	if (gTextureEnemies[6] == NULL)
+	{
+		printf("Failed to load texture image!\n");
+		success = false;
+	}
+
+	gTextureEnemies[7] = loadTexture("Sprites/olril_r.png");
+	if (gTextureEnemies[7] == NULL)
+	{
+		printf("Failed to load texture image!\n");
+		success = false;
+	}
+
+	gTextureEnemies[8] = loadTexture("Sprites/olril_r2.png");
+	if (gTextureEnemies[8] == NULL)
+	{
+		printf("Failed to load texture image!\n");
+		success = false;
+	}
+
+	gTextureEnemies[9] = loadTexture("Sprites/unnath_r.png");
+	if (gTextureEnemies[9] == NULL)
+	{
+		printf("Failed to load texture image!\n");
+		success = false;
+	}
+
+	gFontBig = TTF_OpenFont("Fonts/font.ttf", 35);
+	gFontMed = TTF_OpenFont("Fonts/font.ttf", 16);
+
 	return success;
 }
 
@@ -235,10 +308,15 @@ void close()
 	//Destroy window	
 	SDL_DestroyRenderer(gRenderer);
 	SDL_DestroyWindow(gWindow);
+	TTF_CloseFont(gFontBig);
+	TTF_CloseFont(gFontMed);
 	gWindow = NULL;
 	gRenderer = NULL;
+	gFontBig = NULL;
+	gFontMed = NULL;
 
 	//Quit SDL subsystems
+	TTF_Quit();
 	IMG_Quit();
 	SDL_Quit();
 }
@@ -315,6 +393,26 @@ int main(int argc, char* args[])
 			//While application is running
 			while (!quit)
 			{
+				if (spawnTimer.getTime() >= nextEnemy)
+				{
+					int randomEnemy = rand() % 10;
+
+					nextEnemy = rand() % 2 + 1;
+					spawnTimer.start();
+
+					if (randomEnemy < 5)
+					{
+						enemies.push_back(Kirzos());
+					}
+					else if (randomEnemy < 8)
+					{
+						enemies.push_back(Olril());
+					}
+					else
+					{
+						enemies.push_back(Unnath());
+					}
+				}
 				//Handle events on queue
 				while (SDL_PollEvent(&e) != 0)
 				{
@@ -416,14 +514,18 @@ int main(int argc, char* args[])
 					//SDL_SetRenderDrawColor(gRenderer, 0xFF, 0x00, 0x00, 0xFF);
 					//SDL_RenderFillRect(gRenderer, enemies[i].getRect());
 				}
-				if (p1.getCurrentFrame() > 3)
+				if (p1.getImmunityState() < 2)
 				{
-					SDL_RenderCopy(gRenderer, gTexturePlayer[p1.getCurrentFrame()], NULL, p1.getAttackRect());
+					if (p1.getCurrentFrame() > 3)
+					{
+						SDL_RenderCopy(gRenderer, gTexturePlayer[p1.getCurrentFrame()], NULL, p1.getAttackRect());
+					}
+					else
+					{
+						SDL_RenderCopy(gRenderer, gTexturePlayer[p1.getCurrentFrame()], NULL, p1.getRect());
+					}
 				}
-				else
-				{
-					SDL_RenderCopy(gRenderer, gTexturePlayer[p1.getCurrentFrame()], NULL, p1.getRect());
-				}
+				
 				if (deltaTime.getTime() >= 1.f / 60.f)
 				{
 					deltaTime.start();
@@ -434,6 +536,19 @@ int main(int argc, char* args[])
 
 				//Update screen
 				SDL_RenderPresent(gRenderer);
+
+				for (i = 0; i < enemies.size(); i++)
+				{
+					if (checkCollision(enemies[i].getRect(), p1.getRect()))
+					{
+						p1.takeDamage(50);
+						if (p1.getHealth() <= 0)
+						{
+							gameOver(&quit);
+						}
+					}
+
+				}
 			}
 		}
 	}
@@ -442,4 +557,82 @@ int main(int argc, char* args[])
 	close();
 
 	return 0;
+}
+
+void gameOver(bool *quit)
+{
+	//Event handler
+	SDL_Event e;
+
+	bool restart = false;
+
+	
+
+	SDL_Color color = { 178, 16, 48 };
+	SDL_Surface* surfaceGameOver = TTF_RenderText_Solid(gFontBig,"Game Over", color);
+	SDL_Texture* textureGameOver = SDL_CreateTextureFromSurface(gRenderer, surfaceGameOver);
+	SDL_Rect gameOverRect = { 45, 50, surfaceGameOver->w, surfaceGameOver->h };
+
+	SDL_Surface* surfacePressStart = TTF_RenderText_Solid(gFontMed, "Press START (W) to continue...", color);
+	SDL_Texture* texturePressStart = SDL_CreateTextureFromSurface(gRenderer, surfacePressStart);
+	SDL_Rect pressStartRect = { 6, 125, surfacePressStart->w, surfacePressStart->h };
+
+	SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0x00);
+	SDL_RenderClear(gRenderer);
+	SDL_SetRenderDrawColor(gRenderer, 0xFF, 0x00, 0x00, 0xFF);
+	//SDL_RenderFillRect(gRenderer, &gameOverRect);
+	SDL_RenderCopy(gRenderer, textureGameOver, NULL, &gameOverRect);
+	//SDL_RenderFillRect(gRenderer, &pressStartRect);
+	SDL_RenderCopy(gRenderer, texturePressStart, NULL, &pressStartRect);
+	SDL_RenderPresent(gRenderer);
+
+	//While application is running
+	while (!*quit)
+	{
+		//Handle events on queue
+		while (SDL_PollEvent(&e) != 0)
+		{
+			//User requests quit
+			if (e.type == SDL_QUIT)
+			{
+				*quit = true;
+			}
+			else if (e.type == SDL_KEYDOWN)
+			{
+				if (e.key.keysym.sym == SDLK_w)
+				{
+					restart = true;
+				}
+			}
+
+		}
+		if (restart)
+		{
+			p1 = Player();
+
+			enemies.clear();
+
+			deltaTime.start();
+
+			int randomEnemy = rand() % 10;
+
+			if (randomEnemy < 5)
+			{
+				enemies.push_back(Kirzos());
+			}
+			else if (randomEnemy < 8)
+			{
+				enemies.push_back(Olril());
+			}
+			else
+			{
+				enemies.push_back(Unnath());
+			}
+			break;
+		}
+	}
+	SDL_DestroyTexture(textureGameOver);
+	SDL_DestroyTexture(texturePressStart);
+	SDL_FreeSurface(surfacePressStart);
+	SDL_FreeSurface(surfaceGameOver);
 }

@@ -1,10 +1,21 @@
 #include "Olril.h"
+#include <cmath>
 
 Olril::Olril()
 {
-	initializeRect(250, 160);
-	startFrameTimer();
-	setFrames(2, 3);
 	health = 200;
-	speed = 1;
+	startFrameTimer();
+	if (rand() % 2 == 0)
+	{
+		initializeRect(256, 160);
+		setFrames(2, 3);
+		speed = 1;
+	}
+	else
+	{
+		initializeRect(-16, 160);
+		setFrames(7, 8);
+		speed = -1;
+	}
+	
 }

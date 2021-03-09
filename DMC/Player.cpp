@@ -7,13 +7,16 @@
 
 Player::Player()
 {
+	maxHealth = 200;
+	health = maxHealth;
 	currentFrame = 0;
-	rect = { 10, 160, 16, 32 };
+	rect = { 128, 160, 16, 32 };
 	attackRect = { rect.x, rect.y, 32, 32 };
 	swordRect = { rect.x + 24, rect.y + 8, 10, 8 };
 	frameTimer.start();
 	swordDamage = 100;
 	state = STANDING_RIGHT;
+	immuneState = 0;
 }
 
 void Player::update()
@@ -27,6 +30,14 @@ void Player::update()
 	{
 		state = AFTER_ATTACK_LEFT;
 		currentFrame = 2;
+	}
+	if (immuneState > 0)
+	{
+		(immuneState == 1) ? immuneState = 2 : immuneState = 1;
+		if (immunityTimer.getTime() >= 1)
+		{
+			immuneState = 0;
+		}
 	}
 }
 
@@ -152,4 +163,25 @@ State Player::getState()
 int Player::getSwordDamage()
 {
 	return swordDamage;
+}
+
+void Player::takeDamage(int damage)
+{
+	if (immuneState == 0)
+	{
+		health -= damage;
+		immuneState = 1;
+		immunityTimer.start();
+	}
+	
+}
+
+int Player::getHealth()
+{
+	return health;
+}
+
+int Player::getImmunityState()
+{
+	return immuneState;
 }
