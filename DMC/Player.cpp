@@ -1,20 +1,23 @@
 #include "Player.h"
 #include <SDL.h>
 #include <stdio.h>
+#include <cmath>
+#include <algorithm>
 
 
 
 
 Player::Player()
 {
-	maxHealth = 200;
+	maxHealth = 128;
 	health = maxHealth;
+	speed = 2;
 	currentFrame = 0;
 	rect = { 128, 160, 16, 32 };
 	attackRect = { rect.x, rect.y, 32, 32 };
 	swordRect = { rect.x + 24, rect.y + 8, 10, 8 };
 	frameTimer.start();
-	swordDamage = 100;
+	swordDamage = 64;
 	state = STANDING_RIGHT;
 	immuneState = 0;
 }
@@ -43,7 +46,7 @@ void Player::update()
 
 void Player::moveLeft(float deltaTime)
 {
-	rect.x -= (int)(60.f * deltaTime) * 2;
+	rect.x -= (int)(60.f * deltaTime) * speed;
 	attackRect.x = rect.x - 18;
 	swordRect.x = attackRect.x;
 	if (state != MOVING_LEFT)
@@ -52,7 +55,7 @@ void Player::moveLeft(float deltaTime)
 		frameTimer.start();
 		currentFrame = 3;
 	}
-	else if (frameTimer.getTime() > 0.2)
+	else if (frameTimer.getTime() > 0.2f)
 	{
 		frameTimer.start();
 		(currentFrame == 2) ? currentFrame = 3 : currentFrame = 2;
@@ -62,7 +65,7 @@ void Player::moveLeft(float deltaTime)
 
 void Player::moveRight(float deltaTime)
 {
-	rect.x += (int)(60.f * deltaTime) * 2;
+	rect.x += (int)(60.f * deltaTime) * speed;
 	attackRect.x = rect.x;
 	swordRect.x = rect.x + 24;
 	if (state != MOVING_RIGHT)
@@ -181,7 +184,37 @@ int Player::getHealth()
 	return health;
 }
 
+int Player::getMaxHealth()
+{
+	return maxHealth;
+}
+
+
 int Player::getImmunityState()
 {
 	return immuneState;
+}
+
+void Player::heal()
+{
+	sideEffect();
+	health = maxHealth;
+}
+
+void Player::sideEffect()
+{
+	switch (rand() % 4)
+	{
+	case 0:
+		maxHealth = std::max(32, maxHealth - 32);
+		break;
+	case 1:
+		speed = 1;
+		break;
+	case 2:
+		swordDamage = std::max(16, swordDamage - 16);
+		break;
+	default:
+		break;
+	}
 }

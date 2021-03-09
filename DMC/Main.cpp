@@ -61,6 +61,9 @@ int nextEnemy;
 
 int i, j;
 
+SDL_Rect healthRect;
+SDL_Rect maxHealthRect;
+
 bool init()
 {
 	srand(time(NULL));
@@ -68,6 +71,9 @@ bool init()
 	bool success = true;
 
 	p1 = Player();
+
+	maxHealthRect = { 16, 16, p1.getMaxHealth(), 8 };
+	healthRect = { 16, 16, p1.getHealth(), 8 };
 
 	int randomEnemy = rand() % 10;
 
@@ -421,6 +427,15 @@ int main(int argc, char* args[])
 					{
 						quit = true;
 					}
+					else if (e.type == SDL_KEYDOWN)
+					{
+						if (e.key.keysym.sym == SDLK_q)
+						{
+							p1.heal();
+							maxHealthRect.w = p1.getMaxHealth();
+							healthRect.w = p1.getHealth();
+						}
+					}
 
 				}
 				const Uint8* currentKeyStates = SDL_GetKeyboardState(NULL);
@@ -476,11 +491,15 @@ int main(int argc, char* args[])
 				
 
 				//Clear screen
-				SDL_SetRenderDrawColor(gRenderer, 0x88, 0x88, 0x88, 0x88);
+				SDL_SetRenderDrawColor(gRenderer, 0x88, 0x88, 0x88, 0xFF);
 				SDL_RenderClear(gRenderer);
 
-				//SDL_SetRenderDrawColor(gRenderer, 0xFF, 0x00, 0x00, 0xFF);
-				//SDL_RenderFillRect(gRenderer, p1.getSwordRect());
+				SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xFF);
+				SDL_RenderFillRect(gRenderer, &maxHealthRect);
+
+				SDL_SetRenderDrawColor(gRenderer, 0x49, 0xaa, 0x10, 0xFF);
+				SDL_RenderFillRect(gRenderer, &healthRect);
+
 				for (i = 0; i < projectiles.size(); i++)
 				{
 					projectiles[i].update(deltaTime.getTime());
@@ -489,7 +508,7 @@ int main(int argc, char* args[])
 					{
 						if (checkCollision(projectiles[i].getRect(), enemies[j].getRect()))
 						{
-							enemies[j].takeDamage(50);
+							enemies[j].takeDamage(32);
 							(projectiles[i].getFrame() == 1) ? enemies[j].pushBack(8, 1) : enemies[j].pushBack(8, 0);
 							break;
 							
@@ -541,7 +560,8 @@ int main(int argc, char* args[])
 				{
 					if (checkCollision(enemies[i].getRect(), p1.getRect()))
 					{
-						p1.takeDamage(50);
+						p1.takeDamage(32);
+						healthRect.w = p1.getHealth();
 						if (p1.getHealth() <= 0)
 						{
 							gameOver(&quit);
@@ -609,6 +629,10 @@ void gameOver(bool *quit)
 		if (restart)
 		{
 			p1 = Player();
+
+			maxHealthRect.w = p1.getMaxHealth();
+
+			healthRect.w = p1.getHealth();
 
 			enemies.clear();
 

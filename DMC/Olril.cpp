@@ -3,7 +3,7 @@
 
 Olril::Olril()
 {
-	health = 200;
+	health = 128;
 	startFrameTimer();
 	if (rand() % 2 == 0)
 	{

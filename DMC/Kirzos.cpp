@@ -4,7 +4,7 @@
 Kirzos::Kirzos()
 {
 
-	health = 100;
+	health = 64;
 	startFrameTimer();
 	if (rand() % 2 == 0)
 	{

@@ -23,7 +23,10 @@ public:
 	int getSwordDamage();
 	void takeDamage(int damage);
 	int getHealth();
+	int getMaxHealth();
 	int getImmunityState();
+	void heal();
+	void sideEffect();
 
 private:
 
@@ -38,6 +41,8 @@ private:
 	Timer immunityTimer;
 
 	int currentFrame;
+
+	int speed;
 
 	int swordDamage;
 

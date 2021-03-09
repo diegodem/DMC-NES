@@ -18,7 +18,7 @@ public:
 	void pushBack(int pixels, int direction);
 protected:
 	int speed = 1;
-	int health = 100;
+	int health = 64;
 private:
 	SDL_Rect rect;
 	Timer frameTimer;
