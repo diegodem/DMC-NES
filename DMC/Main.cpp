@@ -47,6 +47,8 @@ SDL_Texture* gTextureProj[2] = { 0 };
 
 SDL_Texture* gTextureEnemies[10] = { 0 };
 
+SDL_Texture* gTextureBackground[3] = { 0 };
+
 Player p1;
 
 std::vector<Projectile> projectiles;
@@ -64,6 +66,8 @@ int i, j;
 SDL_Rect healthRect;
 SDL_Rect maxHealthRect;
 
+SDL_Rect backgroundRect;
+
 bool init()
 {
 	srand(time(NULL));
@@ -74,6 +78,8 @@ bool init()
 
 	maxHealthRect = { 16, 16, p1.getMaxHealth(), 8 };
 	healthRect = { 16, 16, p1.getHealth(), 8 };
+
+	backgroundRect = { 0, 0, 8, 8 };
 
 	int randomEnemy = rand() % 10;
 
@@ -276,6 +282,27 @@ bool loadMedia()
 		success = false;
 	}
 
+	gTextureBackground[0] = loadTexture("Sprites/floor.png");
+	if (gTextureBackground[0] == NULL)
+	{
+		printf("Failed to load texture image!\n");
+		success = false;
+	}
+
+	gTextureBackground[1] = loadTexture("Sprites/floor_2.png");
+	if (gTextureBackground[1] == NULL)
+	{
+		printf("Failed to load texture image!\n");
+		success = false;
+	}
+
+	gTextureBackground[2] = loadTexture("Sprites/brick.png");
+	if (gTextureBackground[2] == NULL)
+	{
+		printf("Failed to load texture image!\n");
+		success = false;
+	}
+
 	gFontBig = TTF_OpenFont("Fonts/font.ttf", 35);
 	gFontMed = TTF_OpenFont("Fonts/font.ttf", 16);
 
@@ -399,7 +426,7 @@ int main(int argc, char* args[])
 			//While application is running
 			while (!quit)
 			{
-				if (spawnTimer.getTime() >= nextEnemy)
+				/*if (spawnTimer.getTime() >= nextEnemy)
 				{
 					int randomEnemy = rand() % 10;
 
@@ -418,7 +445,7 @@ int main(int argc, char* args[])
 					{
 						enemies.push_back(Unnath());
 					}
-				}
+				}*/
 				//Handle events on queue
 				while (SDL_PollEvent(&e) != 0)
 				{
@@ -494,11 +521,27 @@ int main(int argc, char* args[])
 				SDL_SetRenderDrawColor(gRenderer, 0x88, 0x88, 0x88, 0xFF);
 				SDL_RenderClear(gRenderer);
 
+				for (i = 0; i < 28; i++)
+				{
+					backgroundRect.y = i * 8;
+					for (j = 0; j < 32; j++)
+					{
+						backgroundRect.x = j * 8;
+
+						SDL_RenderCopy(gRenderer, gTextureBackground[2], NULL, &backgroundRect);
+
+					}
+				}
+
 				SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xFF);
 				SDL_RenderFillRect(gRenderer, &maxHealthRect);
+				
 
 				SDL_SetRenderDrawColor(gRenderer, 0x49, 0xaa, 0x10, 0xFF);
 				SDL_RenderFillRect(gRenderer, &healthRect);
+
+				SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xFF);
+				SDL_RenderDrawRect(gRenderer, &maxHealthRect);
 
 				for (i = 0; i < projectiles.size(); i++)
 				{
@@ -548,6 +591,19 @@ int main(int argc, char* args[])
 				if (deltaTime.getTime() >= 1.f / 60.f)
 				{
 					deltaTime.start();
+				}
+
+				for (i = 0; i < 4; i++)
+				{
+					backgroundRect.y = 192 + i * 8;
+					for (j = 0; j < 32; j++)
+					{
+						backgroundRect.x = j * 8;
+
+						SDL_RenderCopy(gRenderer, gTextureBackground[(i + j) % 2], NULL, &backgroundRect);
+						//SDL_RenderCopy(gRenderer, gTextureBackground[0], NULL, &backgroundRect);
+
+					}
 				}
 				
 
