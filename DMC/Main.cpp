@@ -47,7 +47,7 @@ SDL_Texture* gTextureProj[2] = { 0 };
 
 SDL_Texture* gTextureEnemies[10] = { 0 };
 
-SDL_Texture* gTextureBackground[3] = { 0 };
+SDL_Texture* gTextureBackground[4] = { 0 };
 
 Player p1;
 
@@ -67,6 +67,7 @@ SDL_Rect healthRect;
 SDL_Rect maxHealthRect;
 
 SDL_Rect backgroundRect;
+SDL_Rect moonRect;
 
 bool init()
 {
@@ -80,6 +81,8 @@ bool init()
 	healthRect = { 16, 16, p1.getHealth(), 8 };
 
 	backgroundRect = { 0, 0, 8, 8 };
+
+	moonRect = { 232, 200, 16, 16 };
 
 	int randomEnemy = rand() % 10;
 
@@ -303,6 +306,13 @@ bool loadMedia()
 		success = false;
 	}
 
+	gTextureBackground[3] = loadTexture("Sprites/moon_2.png");
+	if (gTextureBackground[3] == NULL)
+	{
+		printf("Failed to load texture image!\n");
+		success = false;
+	}
+
 	gFontBig = TTF_OpenFont("Fonts/font.ttf", 35);
 	gFontMed = TTF_OpenFont("Fonts/font.ttf", 16);
 
@@ -426,7 +436,7 @@ int main(int argc, char* args[])
 			//While application is running
 			while (!quit)
 			{
-				/*if (spawnTimer.getTime() >= nextEnemy)
+				if (spawnTimer.getTime() >= nextEnemy)
 				{
 					int randomEnemy = rand() % 10;
 
@@ -445,7 +455,7 @@ int main(int argc, char* args[])
 					{
 						enemies.push_back(Unnath());
 					}
-				}*/
+				}
 				//Handle events on queue
 				while (SDL_PollEvent(&e) != 0)
 				{
@@ -533,6 +543,29 @@ int main(int argc, char* args[])
 					}
 				}
 
+				for (i = 0; i < 4; i++)
+				{
+					backgroundRect.y = 192 + i * 8;
+					for (j = 0; j < 32; j++)
+					{
+						backgroundRect.x = j * 8;
+
+						SDL_RenderCopy(gRenderer, gTextureBackground[(i + j) % 2], NULL, &backgroundRect);
+						//SDL_RenderCopy(gRenderer, gTextureBackground[0], NULL, &backgroundRect);
+
+					}
+				}
+
+				SDL_SetRenderDrawColor(gRenderer, 0xeb, 0xeb, 0xeb, 0xFF);
+				SDL_RenderFillRect(gRenderer, &moonRect);
+
+				SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xFF);
+				SDL_RenderDrawRect(gRenderer, &moonRect);
+
+				SDL_RenderCopy(gRenderer, gTextureBackground[3], NULL, &moonRect);
+
+
+
 				SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xFF);
 				SDL_RenderFillRect(gRenderer, &maxHealthRect);
 				
@@ -593,18 +626,7 @@ int main(int argc, char* args[])
 					deltaTime.start();
 				}
 
-				for (i = 0; i < 4; i++)
-				{
-					backgroundRect.y = 192 + i * 8;
-					for (j = 0; j < 32; j++)
-					{
-						backgroundRect.x = j * 8;
-
-						SDL_RenderCopy(gRenderer, gTextureBackground[(i + j) % 2], NULL, &backgroundRect);
-						//SDL_RenderCopy(gRenderer, gTextureBackground[0], NULL, &backgroundRect);
-
-					}
-				}
+				
 				
 
 
@@ -649,7 +671,7 @@ void gameOver(bool *quit)
 	SDL_Texture* textureGameOver = SDL_CreateTextureFromSurface(gRenderer, surfaceGameOver);
 	SDL_Rect gameOverRect = { 45, 50, surfaceGameOver->w, surfaceGameOver->h };
 
-	SDL_Surface* surfacePressStart = TTF_RenderText_Solid(gFontMed, "Press START (W) to continue...", color);
+	SDL_Surface* surfacePressStart = TTF_RenderText_Solid(gFontMed, "Press START (W) to try again...", color);
 	SDL_Texture* texturePressStart = SDL_CreateTextureFromSurface(gRenderer, surfacePressStart);
 	SDL_Rect pressStartRect = { 6, 125, surfacePressStart->w, surfacePressStart->h };
 
