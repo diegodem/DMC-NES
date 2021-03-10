@@ -74,6 +74,8 @@ Mix_Chunk* gGunSound;
 Mix_Chunk* gSwordSound;
 Mix_Chunk* gHealSound;
 Mix_Chunk* gHurtSound;
+Mix_Chunk* gCantShootSound;
+Mix_Chunk* gHitSound;
 
 bool init()
 {
@@ -356,6 +358,20 @@ bool loadMedia()
 		success = false;
 	}
 
+	gHitSound = Mix_LoadWAV("Sounds/hit.wav");
+	if (gHitSound == NULL)
+	{
+		printf("Failed to load gun sound effect! SDL_mixer Error: %s\n", Mix_GetError());
+		success = false;
+	}
+
+	gCantShootSound = Mix_LoadWAV("Sounds/cantShoot.wav");
+	if (gCantShootSound == NULL)
+	{
+		printf("Failed to load gun sound effect! SDL_mixer Error: %s\n", Mix_GetError());
+		success = false;
+	}
+
 	return success;
 }
 
@@ -537,6 +553,7 @@ int main(int argc, char* args[])
 							{
 								enemies[i].takeDamage(p1.getSwordDamage());
 								enemies[i].pushBack(16, attackResult);
+								Mix_PlayChannel(-1, gHitSound, 0);
 								if (enemies[i].getHealth() <= 0)
 								{
 									enemies.erase(enemies.begin() + i);
@@ -551,13 +568,29 @@ int main(int argc, char* args[])
 				{
 					if (p1.getState() == STANDING_RIGHT || p1.getState() == MOVING_RIGHT)
 					{
-						projectiles.push_back(Projectile(p1.getRect()->x, 1));
-						Mix_PlayChannel(-1, gGunSound, 0);
+						if (p1.getCanShoot())
+						{
+							projectiles.push_back(Projectile(p1.getRect()->x, 1));
+							Mix_PlayChannel(-1, gGunSound, 0);
+						}
+						else
+						{
+							Mix_PlayChannel(-1, gCantShootSound, 0);
+						}
+						
 					}
 					else if (p1.getState() == STANDING_LEFT || p1.getState() == MOVING_LEFT)
 					{
-						projectiles.push_back(Projectile(p1.getRect()->x, 0));
-						Mix_PlayChannel(-1, gGunSound, 0);
+						if (p1.getCanShoot())
+						{
+							projectiles.push_back(Projectile(p1.getRect()->x, 0));
+							Mix_PlayChannel(-1, gGunSound, 0);
+						}
+						else
+						{
+							Mix_PlayChannel(-1, gCantShootSound, 0);
+						}
+						
 					}
 					p1.fire();
 
@@ -635,6 +668,7 @@ int main(int argc, char* args[])
 						if (checkCollision(projectiles[i].getRect(), enemies[j].getRect()))
 						{
 							enemies[j].takeDamage(32);
+							Mix_PlayChannel(-1, gHitSound, 0);
 							(projectiles[i].getFrame() == 1) ? enemies[j].pushBack(8, 1) : enemies[j].pushBack(8, 0);
 							break;
 							

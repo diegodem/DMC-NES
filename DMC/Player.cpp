@@ -21,6 +21,7 @@ Player::Player()
 	state = STANDING_RIGHT;
 	immuneState = 0;
 	immunityTimer.start();
+	canShoot = true;
 }
 
 void Player::update()
@@ -221,18 +222,41 @@ void Player::heal()
 
 void Player::sideEffect()
 {
-	switch (rand() % 4)
+	switch (rand() % 5)
 	{
 	case 0:
 		maxHealth = std::max(32, maxHealth - 32);
 		break;
 	case 1:
-		speed = 1;
+		if (speed == 2)
+		{
+			speed = 1;
+		}
+		else
+		{
+			swordDamage = std::max(16, swordDamage - 16);
+		}
 		break;
 	case 2:
 		swordDamage = std::max(16, swordDamage - 16);
 		break;
+	case 3:
+		if (canShoot)
+		{
+			canShoot = false;
+		}
+		else
+		{
+			maxHealth = std::max(32, maxHealth - 32);
+		}
+		
+		break;
 	default:
 		break;
 	}
+}
+
+bool Player::getCanShoot()
+{
+	return canShoot;
 }

@@ -25,6 +25,7 @@ public:
 	int getHealth();
 	int getMaxHealth();
 	int getImmunityState();
+	bool getCanShoot();
 	void heal();
 	void sideEffect();
 
@@ -50,5 +51,7 @@ private:
 	int health;
 
 	int immuneState;
+
+	bool canShoot;
 
 };
