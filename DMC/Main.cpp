@@ -1,6 +1,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
+#include <SDL_mixer.h>
 #include <stdio.h>
 #include <time.h>
 #include <string>
@@ -68,6 +69,11 @@ SDL_Rect maxHealthRect;
 
 SDL_Rect backgroundRect;
 SDL_Rect moonRect;
+
+Mix_Chunk* gGunSound;
+Mix_Chunk* gSwordSound;
+Mix_Chunk* gHealSound;
+Mix_Chunk* gHurtSound;
 
 bool init()
 {
@@ -144,6 +150,12 @@ bool init()
 				if (TTF_Init() == -1)
 				{
 					printf("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError());
+					success = false;
+				}
+
+				if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
+				{
+					printf("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
 					success = false;
 				}
 			}
@@ -316,6 +328,34 @@ bool loadMedia()
 	gFontBig = TTF_OpenFont("Fonts/font.ttf", 35);
 	gFontMed = TTF_OpenFont("Fonts/font.ttf", 16);
 
+	gGunSound = Mix_LoadWAV("Sounds/gun.wav");
+	if (gGunSound == NULL)
+	{
+		printf("Failed to load gun sound effect! SDL_mixer Error: %s\n", Mix_GetError());
+		success = false;
+	}
+
+	gSwordSound = Mix_LoadWAV("Sounds/sword.wav");
+	if (gSwordSound == NULL)
+	{
+		printf("Failed to load gun sound effect! SDL_mixer Error: %s\n", Mix_GetError());
+		success = false;
+	}
+
+	gHealSound = Mix_LoadWAV("Sounds/heal.wav");
+	if (gHealSound == NULL)
+	{
+		printf("Failed to load gun sound effect! SDL_mixer Error: %s\n", Mix_GetError());
+		success = false;
+	}
+
+	gHurtSound = Mix_LoadWAV("Sounds/hurt.wav");
+	if (gHurtSound == NULL)
+	{
+		printf("Failed to load gun sound effect! SDL_mixer Error: %s\n", Mix_GetError());
+		success = false;
+	}
+
 	return success;
 }
 
@@ -353,12 +393,17 @@ void close()
 	SDL_DestroyWindow(gWindow);
 	TTF_CloseFont(gFontBig);
 	TTF_CloseFont(gFontMed);
+	Mix_FreeChunk(gGunSound);
+	Mix_FreeChunk(gSwordSound);
 	gWindow = NULL;
 	gRenderer = NULL;
 	gFontBig = NULL;
 	gFontMed = NULL;
+	gGunSound = NULL;
+	gSwordSound = NULL;
 
 	//Quit SDL subsystems
+	Mix_Quit();
 	TTF_Quit();
 	IMG_Quit();
 	SDL_Quit();
@@ -469,6 +514,7 @@ int main(int argc, char* args[])
 						if (e.key.keysym.sym == SDLK_q)
 						{
 							p1.heal();
+							Mix_PlayChannel(-1, gHealSound, 0);
 							maxHealthRect.w = p1.getMaxHealth();
 							healthRect.w = p1.getHealth();
 						}
@@ -483,6 +529,8 @@ int main(int argc, char* args[])
 					
 					if (attackResult)
 					{
+						Mix_PlayChannel(-1, gSwordSound, 0);
+
 						for (i = 0; i < enemies.size(); i++)
 						{
 							if (checkCollision(p1.getSwordRect(), enemies[i].getRect()))
@@ -504,10 +552,12 @@ int main(int argc, char* args[])
 					if (p1.getState() == STANDING_RIGHT || p1.getState() == MOVING_RIGHT)
 					{
 						projectiles.push_back(Projectile(p1.getRect()->x, 1));
+						Mix_PlayChannel(-1, gGunSound, 0);
 					}
 					else if (p1.getState() == STANDING_LEFT || p1.getState() == MOVING_LEFT)
 					{
 						projectiles.push_back(Projectile(p1.getRect()->x, 0));
+						Mix_PlayChannel(-1, gGunSound, 0);
 					}
 					p1.fire();
 
@@ -638,6 +688,10 @@ int main(int argc, char* args[])
 				{
 					if (checkCollision(enemies[i].getRect(), p1.getRect()))
 					{
+						if (p1.getImmunityState() == 0)
+						{
+							Mix_PlayChannel(-1, gHurtSound, 0);
+						}
 						p1.takeDamage(32);
 						healthRect.w = p1.getHealth();
 						if (p1.getHealth() <= 0)

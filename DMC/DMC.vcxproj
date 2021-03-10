@@ -80,8 +80,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>D:\Documentos\SDL Projects\lib\SDL2_ttf\include;D:\Documentos\SDL Projects\lib\SDL2\include;D:\Documentos\SDL Projects\lib\SDL2_image\include;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\Documentos\SDL Projects\lib\SDL2\lib\x64;D:\Documentos\SDL Projects\lib\SDL2_image\lib\x64;D:\Documentos\SDL Projects\lib\SDL2_ttf\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>D:\Documentos\SDL Projects\lib\SDL2_mixer\include;D:\Documentos\SDL Projects\lib\SDL2_ttf\include;D:\Documentos\SDL Projects\lib\SDL2\include;D:\Documentos\SDL Projects\lib\SDL2_image\include;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\Documentos\SDL Projects\lib\SDL2\lib\x64;D:\Documentos\SDL Projects\lib\SDL2_image\lib\x64;D:\Documentos\SDL Projects\lib\SDL2_ttf\lib\x64;D:\Documentos\SDL Projects\lib\SDL2_mixer\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -125,7 +125,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

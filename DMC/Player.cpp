@@ -20,6 +20,7 @@ Player::Player()
 	swordDamage = 64;
 	state = STANDING_RIGHT;
 	immuneState = 0;
+	immunityTimer.start();
 }
 
 void Player::update()
