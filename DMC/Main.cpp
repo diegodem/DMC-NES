@@ -325,8 +325,8 @@ bool loadMedia()
 		success = false;
 	}
 
-	gFontBig = TTF_OpenFont("Fonts/font.ttf", 35);
-	gFontMed = TTF_OpenFont("Fonts/font.ttf", 16);
+	gFontBig = TTF_OpenFont("Fonts/Caveat-Bold.ttf", 40);
+	gFontMed = TTF_OpenFont("Fonts/Pixeled.ttf", 5);
 
 	gGunSound = Mix_LoadWAV("Sounds/gun.wav");
 	if (gGunSound == NULL)
@@ -721,13 +721,13 @@ void gameOver(bool *quit)
 	
 
 	SDL_Color color = { 178, 16, 48 };
-	SDL_Surface* surfaceGameOver = TTF_RenderText_Solid(gFontBig,"Game Over", color);
+	SDL_Surface* surfaceGameOver = TTF_RenderText_Solid(gFontMed,"GAME OVER", color);
 	SDL_Texture* textureGameOver = SDL_CreateTextureFromSurface(gRenderer, surfaceGameOver);
-	SDL_Rect gameOverRect = { 45, 50, surfaceGameOver->w, surfaceGameOver->h };
+	SDL_Rect gameOverRect = { 106, 64, surfaceGameOver->w, surfaceGameOver->h };
 
 	SDL_Surface* surfacePressStart = TTF_RenderText_Solid(gFontMed, "Press START (W) to try again...", color);
 	SDL_Texture* texturePressStart = SDL_CreateTextureFromSurface(gRenderer, surfacePressStart);
-	SDL_Rect pressStartRect = { 6, 125, surfacePressStart->w, surfacePressStart->h };
+	SDL_Rect pressStartRect = { 64, 128, surfacePressStart->w, surfacePressStart->h };
 
 	SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0x00);
 	SDL_RenderClear(gRenderer);
