@@ -30,7 +30,13 @@ bool loadMedia();
 
 static bool checkCollision(SDL_Rect *rectA, SDL_Rect *rectB);
 
-void gameOver(bool *quit);
+void gameOverScreen(bool *quit);
+
+void titleScreen(bool* quit);
+
+void tutorialScreen(bool* quit);
+
+void creditsScreen(bool* quit);
 
 SDL_Texture *loadTexture(std::string path);
 
@@ -92,11 +98,11 @@ bool init()
 
 	moonRect = { 232, 200, 16, 16 };
 
-	int randomEnemy = rand() % 10;
+	//int randomEnemy = rand() % 10;
 
-	nextEnemy = rand() % 2 + 1;
+	nextEnemy = 4;
 
-	if (randomEnemy < 5)
+	/*if (randomEnemy < 5)
 	{
 		enemies.push_back(Kirzos());
 	}
@@ -107,7 +113,7 @@ bool init()
 	else
 	{
 		enemies.push_back(Unnath());
-	}
+	}*/
 
 
 	//Initialize SDL
@@ -327,7 +333,7 @@ bool loadMedia()
 		success = false;
 	}
 
-	gFontBig = TTF_OpenFont("Fonts/Caveat-Bold.ttf", 40);
+	gFontBig = TTF_OpenFont("Fonts/Caveat-Bold.ttf", 26);
 	gFontMed = TTF_OpenFont("Fonts/Pixeled.ttf", 5);
 
 	gGunSound = Mix_LoadWAV("Sounds/gun.wav");
@@ -491,10 +497,16 @@ int main(int argc, char* args[])
 			//Main loop flag
 			bool quit = false;
 
+			titleScreen(&quit);
+
+			tutorialScreen(&quit);
+
 			//Event handler
 			SDL_Event e;
 
 			//While application is running
+			deltaTime.start();
+			spawnTimer.start();
 			while (!quit)
 			{
 				if (spawnTimer.getTime() >= nextEnemy)
@@ -730,7 +742,7 @@ int main(int argc, char* args[])
 						healthRect.w = p1.getHealth();
 						if (p1.getHealth() <= 0)
 						{
-							gameOver(&quit);
+							gameOverScreen(&quit);
 						}
 					}
 
@@ -745,7 +757,7 @@ int main(int argc, char* args[])
 	return 0;
 }
 
-void gameOver(bool *quit)
+void gameOverScreen(bool *quit)
 {
 	//Event handler
 	SDL_Event e;
@@ -825,4 +837,260 @@ void gameOver(bool *quit)
 	SDL_DestroyTexture(texturePressStart);
 	SDL_FreeSurface(surfacePressStart);
 	SDL_FreeSurface(surfaceGameOver);
+}
+
+void titleScreen(bool* quit)
+{
+	//Event handler
+	SDL_Event e;
+
+	bool restart = false;
+
+
+
+	SDL_Color color = { 178, 16, 48 };
+	SDL_Surface* surfaceTitle = TTF_RenderText_Solid(gFontBig, "Demon Might Crow", color);
+	SDL_Texture* textureTitle = SDL_CreateTextureFromSurface(gRenderer, surfaceTitle);
+	SDL_Rect titleRect = { 42, 64, surfaceTitle->w, surfaceTitle->h };
+
+	SDL_Surface* surfacePressStart = TTF_RenderText_Solid(gFontMed, "Press START (W) to play", color);
+	SDL_Texture* texturePressStart = SDL_CreateTextureFromSurface(gRenderer, surfacePressStart);
+	SDL_Rect pressStartRect = { 78, 128, surfacePressStart->w, surfacePressStart->h };
+
+	SDL_Surface* surfacePressSelect = TTF_RenderText_Solid(gFontMed, "Press SELECT (Q) to see the credits", color);
+	SDL_Texture* texturePressSelect = SDL_CreateTextureFromSurface(gRenderer, surfacePressSelect);
+	SDL_Rect pressSelectRect = { 53, 150, surfacePressSelect->w, surfacePressSelect->h };
+
+	SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0x00);
+	SDL_RenderClear(gRenderer);
+	SDL_SetRenderDrawColor(gRenderer, 0xFF, 0x00, 0x00, 0xFF);
+	//SDL_RenderFillRect(gRenderer, &gameOverRect);
+	SDL_RenderCopy(gRenderer, textureTitle, NULL, &titleRect);
+	//SDL_RenderFillRect(gRenderer, &pressStartRect);
+	SDL_RenderCopy(gRenderer, texturePressStart, NULL, &pressStartRect);
+	SDL_RenderCopy(gRenderer, texturePressSelect, NULL, &pressSelectRect);
+	SDL_RenderPresent(gRenderer);
+
+	//While application is running
+	while (!*quit)
+	{
+		//Handle events on queue
+		while (SDL_PollEvent(&e) != 0)
+		{
+			//User requests quit
+			if (e.type == SDL_QUIT)
+			{
+				*quit = true;
+			}
+			else if (e.type == SDL_KEYDOWN)
+			{
+				if (e.key.keysym.sym == SDLK_w)
+				{
+					restart = true;
+				}
+				else if (e.key.keysym.sym == SDLK_q)
+				{
+					creditsScreen(quit);
+					SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0x00);
+					SDL_RenderClear(gRenderer);
+					SDL_SetRenderDrawColor(gRenderer, 0xFF, 0x00, 0x00, 0xFF);
+					//SDL_RenderFillRect(gRenderer, &gameOverRect);
+					SDL_RenderCopy(gRenderer, textureTitle, NULL, &titleRect);
+					//SDL_RenderFillRect(gRenderer, &pressStartRect);
+					SDL_RenderCopy(gRenderer, texturePressStart, NULL, &pressStartRect);
+					SDL_RenderCopy(gRenderer, texturePressSelect, NULL, &pressSelectRect);
+					SDL_RenderPresent(gRenderer);
+				}
+			}
+
+		}
+		if (restart)
+		{
+			break;
+		}
+	}
+	SDL_DestroyTexture(textureTitle);
+	SDL_DestroyTexture(texturePressStart);
+	SDL_FreeSurface(surfacePressStart);
+	SDL_FreeSurface(surfaceTitle);
+}
+
+void creditsScreen(bool* quit)
+{
+	//Event handler
+	SDL_Event e;
+
+	bool restart = false;
+
+
+
+	SDL_Color color = { 178, 16, 48 };
+	SDL_Surface* surfaceTitle = TTF_RenderText_Solid(gFontBig, "Credits", color);
+	SDL_Texture* textureTitle = SDL_CreateTextureFromSurface(gRenderer, surfaceTitle);
+	SDL_Rect titleRect = { 42, 64, surfaceTitle->w, surfaceTitle->h };
+
+	SDL_Surface* surfacePressStart = TTF_RenderText_Solid(gFontMed, "Press START (W) to play", color);
+	SDL_Texture* texturePressStart = SDL_CreateTextureFromSurface(gRenderer, surfacePressStart);
+	SDL_Rect pressStartRect = { 78, 128, surfacePressStart->w, surfacePressStart->h };
+
+	SDL_Surface* surfacePressSelect = TTF_RenderText_Solid(gFontMed, "Press SELECT (Q) to see the credits", color);
+	SDL_Texture* texturePressSelect = SDL_CreateTextureFromSurface(gRenderer, surfacePressSelect);
+	SDL_Rect pressSelectRect = { 53, 150, surfacePressSelect->w, surfacePressSelect->h };
+
+	SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0x00);
+	SDL_RenderClear(gRenderer);
+	SDL_SetRenderDrawColor(gRenderer, 0xFF, 0x00, 0x00, 0xFF);
+	//SDL_RenderFillRect(gRenderer, &gameOverRect);
+	SDL_RenderCopy(gRenderer, textureTitle, NULL, &titleRect);
+	//SDL_RenderFillRect(gRenderer, &pressStartRect);
+	SDL_RenderCopy(gRenderer, texturePressStart, NULL, &pressStartRect);
+	SDL_RenderCopy(gRenderer, texturePressSelect, NULL, &pressSelectRect);
+	SDL_RenderPresent(gRenderer);
+
+	//While application is running
+	while (!*quit)
+	{
+		//Handle events on queue
+		while (SDL_PollEvent(&e) != 0)
+		{
+			//User requests quit
+			if (e.type == SDL_QUIT)
+			{
+				*quit = true;
+			}
+			else if (e.type == SDL_KEYDOWN)
+			{
+				if (e.key.keysym.sym == SDLK_w)
+				{
+					restart = true;
+				}
+			}
+
+		}
+		if (restart)
+		{
+			break;
+		}
+	}
+	SDL_DestroyTexture(textureTitle);
+	SDL_DestroyTexture(texturePressStart);
+	SDL_FreeSurface(surfacePressStart);
+	SDL_FreeSurface(surfaceTitle);
+}
+
+void tutorialScreen(bool* quit)
+{
+	//Event handler
+	SDL_Event e;
+
+	bool restart = false;
+
+
+
+	SDL_Color color = { 178, 16, 48 };
+
+	SDL_Surface* surfaces[14];
+	SDL_Texture* textures[14];
+	SDL_Rect rects[14];
+
+	surfaces[0] = TTF_RenderText_Solid(gFontBig, "Introduction", color);
+	textures[0] = SDL_CreateTextureFromSurface(gRenderer, surfaces[0]);
+	rects[0] = { 32, 16, surfaces[0]->w, surfaces[0]->h };
+
+	surfaces[1] = TTF_RenderText_Solid(gFontMed, "Your Vital Moons have been cursed. You can ", color);
+	textures[1] = SDL_CreateTextureFromSurface(gRenderer, surfaces[1]);
+	rects[1] = { 32, 48, surfaces[1]->w, surfaces[1]->h };
+
+	surfaces[2] = TTF_RenderText_Solid(gFontMed, "use them to heal but you have a high chance", color);
+	textures[2] = SDL_CreateTextureFromSurface(gRenderer, surfaces[2]);
+	rects[2] = { 32, 56, surfaces[2]->w, surfaces[2]->h };
+
+	surfaces[3] = TTF_RenderText_Solid(gFontMed, "of having side effects.", color);
+	textures[3] = SDL_CreateTextureFromSurface(gRenderer, surfaces[3]);
+	rects[3] = { 32, 64, surfaces[3]->w, surfaces[3]->h };
+
+	surfaces[4] = TTF_RenderText_Solid(gFontMed, "Side effects can involve reduced sword", color);
+	textures[4] = SDL_CreateTextureFromSurface(gRenderer, surfaces[4]);
+	rects[4] = { 32, 80, surfaces[4]->w, surfaces[4]->h };
+
+	surfaces[5] = TTF_RenderText_Solid(gFontMed, "attack, reduced health bar, inability to shoot", color);
+	textures[5] = SDL_CreateTextureFromSurface(gRenderer, surfaces[5]);
+	rects[5] = { 32, 88, surfaces[5]->w, surfaces[5]->h };
+
+	surfaces[6] = TTF_RenderText_Solid(gFontMed, "or slowed down movement.", color);
+	textures[6] = SDL_CreateTextureFromSurface(gRenderer, surfaces[6]);
+	rects[6] = { 32, 96, surfaces[6]->w, surfaces[6]->h };
+
+	surfaces[7] = TTF_RenderText_Solid(gFontBig, "Controls", color);
+	textures[7] = SDL_CreateTextureFromSurface(gRenderer, surfaces[7]);
+	rects[7] = { 32, 112, surfaces[7]->w, surfaces[7]->h };
+
+	surfaces[10] = TTF_RenderText_Solid(gFontMed, "D-Pad (Arrow keys): Move", color);
+	textures[10] = SDL_CreateTextureFromSurface(gRenderer, surfaces[10]);
+	rects[10] = { 32, 144, surfaces[10]->w, surfaces[10]->h };
+
+	surfaces[8] = TTF_RenderText_Solid(gFontMed, "Button A (Z key): Sword Attack", color);
+	textures[8] = SDL_CreateTextureFromSurface(gRenderer, surfaces[8]);
+	rects[8] = { 32, 152, surfaces[8]->w, surfaces[8]->h };
+
+	surfaces[9] = TTF_RenderText_Solid(gFontMed, "Button B (X key): Fire Gun", color);
+	textures[9] = SDL_CreateTextureFromSurface(gRenderer, surfaces[9]);
+	rects[9] = { 32, 160, surfaces[9]->w, surfaces[9]->h };
+
+	surfaces[11] = TTF_RenderText_Solid(gFontMed, "Button SELECT (Q key): Use Vital Moon", color);
+	textures[11] = SDL_CreateTextureFromSurface(gRenderer, surfaces[11]);
+	rects[11] = { 32, 168, surfaces[11]->w, surfaces[11]->h };
+
+	surfaces[12] = TTF_RenderText_Solid(gFontMed, "Button START (W key): Pause Game", color);
+	textures[12] = SDL_CreateTextureFromSurface(gRenderer, surfaces[12]);
+	rects[12] = { 32, 176, surfaces[12]->w, surfaces[12]->h };
+
+	surfaces[13] = TTF_RenderText_Solid(gFontMed, "Press START (W key) to begin playing", color);
+	textures[13] = SDL_CreateTextureFromSurface(gRenderer, surfaces[13]);
+	rects[13] = { 96, 200, surfaces[13]->w, surfaces[13]->h };
+
+
+	SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0x00);
+	SDL_RenderClear(gRenderer);
+	SDL_SetRenderDrawColor(gRenderer, 0xFF, 0x00, 0x00, 0xFF);
+
+	for (i = 0; i < 14; i++)
+	{
+		SDL_RenderCopy(gRenderer, textures[i], NULL, &rects[i]);
+	}
+	
+	SDL_RenderPresent(gRenderer);
+
+	//While application is running
+	while (!*quit)
+	{
+		//Handle events on queue
+		while (SDL_PollEvent(&e) != 0)
+		{
+			//User requests quit
+			if (e.type == SDL_QUIT)
+			{
+				*quit = true;
+			}
+			else if (e.type == SDL_KEYDOWN)
+			{
+				if (e.key.keysym.sym == SDLK_w)
+				{
+					restart = true;
+				}
+			}
+
+		}
+		if (restart)
+		{
+			break;
+		}
+	}
+	for (i = 0; i < 14; i++)
+	{
+		SDL_DestroyTexture(textures[i]);
+		SDL_FreeSurface(surfaces[i]);
+	}
+	
+	
 }
