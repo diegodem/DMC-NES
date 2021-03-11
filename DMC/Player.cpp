@@ -22,6 +22,7 @@ Player::Player()
 	immuneState = 0;
 	immunityTimer.start();
 	canShoot = true;
+	ammo = 50;
 }
 
 void Player::update()
@@ -126,12 +127,24 @@ void Player::fire()
 		state = ATTACKING_RIGHT;
 		frameTimer.start();
 		currentFrame = 0;
+		if (canShoot)
+		{
+			ammo--;
+		}
 	}
 	else if (state == STANDING_LEFT || state == MOVING_LEFT)
 	{
 		state = ATTACKING_LEFT;
 		frameTimer.start();
 		currentFrame = 2;
+		if (canShoot)
+		{
+			ammo--;
+		}
+	}
+	if (ammo == 0)
+	{
+		canShoot = false;
 	}
 }
 
@@ -259,4 +272,9 @@ void Player::sideEffect()
 bool Player::getCanShoot()
 {
 	return canShoot;
+}
+
+int Player::getAmmo()
+{
+	return ammo;
 }

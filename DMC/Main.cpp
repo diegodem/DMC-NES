@@ -54,7 +54,7 @@ SDL_Texture* gTextureProj[2] = { 0 };
 
 SDL_Texture* gTextureEnemies[10] = { 0 };
 
-SDL_Texture* gTextureBackground[4] = { 0 };
+SDL_Texture* gTextureBackground[5] = { 0 };
 
 Player p1;
 
@@ -75,6 +75,7 @@ SDL_Rect maxHealthRect;
 
 SDL_Rect backgroundRect;
 SDL_Rect moonRect;
+SDL_Rect ammoRect;
 
 Mix_Chunk* gGunSound;
 Mix_Chunk* gSwordSound;
@@ -97,6 +98,8 @@ bool init()
 	backgroundRect = { 0, 0, 8, 8 };
 
 	moonRect = { 232, 200, 16, 16 };
+
+	ammoRect = { 8, 200, 48, 16 };
 
 	//int randomEnemy = rand() % 10;
 
@@ -333,6 +336,13 @@ bool loadMedia()
 		success = false;
 	}
 
+	gTextureBackground[4] = loadTexture("Sprites/cross.png");
+	if (gTextureBackground[4] == NULL)
+	{
+		printf("Failed to load texture image!\n");
+		success = false;
+	}
+
 	gFontBig = TTF_OpenFont("Fonts/Caveat-Bold.ttf", 26);
 	gFontMed = TTF_OpenFont("Fonts/Pixeled.ttf", 5);
 
@@ -509,7 +519,7 @@ int main(int argc, char* args[])
 			spawnTimer.start();
 			while (!quit)
 			{
-				if (spawnTimer.getTime() >= nextEnemy)
+				/*if (spawnTimer.getTime() >= nextEnemy)
 				{
 					int randomEnemy = rand() % 10;
 
@@ -528,7 +538,7 @@ int main(int argc, char* args[])
 					{
 						enemies.push_back(Unnath());
 					}
-				}
+				}*/
 				//Handle events on queue
 				while (SDL_PollEvent(&e) != 0)
 				{
@@ -658,6 +668,35 @@ int main(int argc, char* args[])
 				SDL_RenderDrawRect(gRenderer, &moonRect);
 
 				SDL_RenderCopy(gRenderer, gTextureBackground[3], NULL, &moonRect);
+
+				SDL_SetRenderDrawColor(gRenderer, 0xeb, 0xeb, 0xeb, 0xFF);
+				SDL_RenderFillRect(gRenderer, &ammoRect);
+
+				SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xFF);
+				SDL_RenderDrawRect(gRenderer, &ammoRect);
+
+				if (!p1.getCanShoot())
+				{
+					SDL_RenderCopy(gRenderer, gTextureBackground[4], NULL, &ammoRect);
+				}
+				
+
+				std::string ammoStr;
+				ammoStr.assign("Ammo: ");
+				ammoStr.append(std::to_string(p1.getAmmo()));
+
+				SDL_Color color = { 0, 0, 0 };
+
+				SDL_Surface* surfaceAmmo = TTF_RenderText_Solid(gFontMed, ammoStr.c_str(), color);
+				SDL_Texture* textureAmmo = SDL_CreateTextureFromSurface(gRenderer, surfaceAmmo);
+				SDL_Rect ammoTextRect = { 12, 200, surfaceAmmo->w, surfaceAmmo->h };
+
+				SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0x00);
+				SDL_SetRenderDrawColor(gRenderer, 0xFF, 0x00, 0x00, 0xFF);
+				//SDL_RenderFillRect(gRenderer, &gameOverRect);
+				SDL_RenderCopy(gRenderer, textureAmmo, NULL, &ammoTextRect);
+
+				
 
 
 
@@ -816,7 +855,11 @@ void gameOverScreen(bool *quit)
 
 			deltaTime.start();
 
-			int randomEnemy = rand() % 10;
+			spawnTimer.start();
+
+			nextEnemy = 3;
+
+			/*int randomEnemy = rand() % 10;
 
 			if (randomEnemy < 5)
 			{
@@ -829,7 +872,7 @@ void gameOverScreen(bool *quit)
 			else
 			{
 				enemies.push_back(Unnath());
-			}
+			}*/
 			break;
 		}
 	}
@@ -925,26 +968,77 @@ void creditsScreen(bool* quit)
 
 
 	SDL_Color color = { 178, 16, 48 };
-	SDL_Surface* surfaceTitle = TTF_RenderText_Solid(gFontBig, "Credits", color);
-	SDL_Texture* textureTitle = SDL_CreateTextureFromSurface(gRenderer, surfaceTitle);
-	SDL_Rect titleRect = { 42, 64, surfaceTitle->w, surfaceTitle->h };
 
-	SDL_Surface* surfacePressStart = TTF_RenderText_Solid(gFontMed, "Press START (W) to play", color);
-	SDL_Texture* texturePressStart = SDL_CreateTextureFromSurface(gRenderer, surfacePressStart);
-	SDL_Rect pressStartRect = { 78, 128, surfacePressStart->w, surfacePressStart->h };
+	SDL_Surface* surfaces[14];
+	SDL_Texture* textures[14];
+	SDL_Rect rects[14];
 
-	SDL_Surface* surfacePressSelect = TTF_RenderText_Solid(gFontMed, "Press SELECT (Q) to see the credits", color);
-	SDL_Texture* texturePressSelect = SDL_CreateTextureFromSurface(gRenderer, surfacePressSelect);
-	SDL_Rect pressSelectRect = { 53, 150, surfacePressSelect->w, surfacePressSelect->h };
+	surfaces[0] = TTF_RenderText_Solid(gFontBig, "Credits", color);
+	textures[0] = SDL_CreateTextureFromSurface(gRenderer, surfaces[0]);
+	rects[0] = { 32, 16, surfaces[0]->w, surfaces[0]->h };
+
+	surfaces[1] = TTF_RenderText_Solid(gFontMed, "Music", color);
+	textures[1] = SDL_CreateTextureFromSurface(gRenderer, surfaces[1]);
+	rects[1] = { 116, 56, surfaces[1]->w, surfaces[1]->h };
+
+	surfaces[2] = TTF_RenderText_Solid(gFontMed, "Thriller - Michael Jackson", color);
+	textures[2] = SDL_CreateTextureFromSurface(gRenderer, surfaces[2]);
+	rects[2] = { 74, 72, surfaces[2]->w, surfaces[2]->h };
+
+	surfaces[3] = TTF_RenderText_Solid(gFontMed, "Programming, Design and Sprites", color);
+	textures[3] = SDL_CreateTextureFromSurface(gRenderer, surfaces[3]);
+	rects[3] = { 60, 96, surfaces[3]->w, surfaces[3]->h };
+
+	surfaces[4] = TTF_RenderText_Solid(gFontMed, "Diego de Miguel", color);
+	textures[4] = SDL_CreateTextureFromSurface(gRenderer, surfaces[4]);
+	rects[4] = { 97, 112, surfaces[4]->w, surfaces[4]->h };
+
+	surfaces[5] = TTF_RenderText_Solid(gFontMed, "attack, reduced health bar, inability to shoot", color);
+	textures[5] = SDL_CreateTextureFromSurface(gRenderer, surfaces[5]);
+	rects[5] = { 32, 150, surfaces[5]->w, surfaces[5]->h };
+
+	surfaces[6] = TTF_RenderText_Solid(gFontMed, "or slowed down movement.", color);
+	textures[6] = SDL_CreateTextureFromSurface(gRenderer, surfaces[6]);
+	rects[6] = { 32, 150, surfaces[6]->w, surfaces[6]->h };
+
+	surfaces[7] = TTF_RenderText_Solid(gFontBig, "Controls", color);
+	textures[7] = SDL_CreateTextureFromSurface(gRenderer, surfaces[7]);
+	rects[7] = { 32, 150, surfaces[7]->w, surfaces[7]->h };
+
+	surfaces[10] = TTF_RenderText_Solid(gFontMed, "D-Pad (Arrow keys): Move", color);
+	textures[10] = SDL_CreateTextureFromSurface(gRenderer, surfaces[10]);
+	rects[10] = { 32, 150, surfaces[10]->w, surfaces[10]->h };
+
+	surfaces[8] = TTF_RenderText_Solid(gFontMed, "Button A (Z key): Sword Attack", color);
+	textures[8] = SDL_CreateTextureFromSurface(gRenderer, surfaces[8]);
+	rects[8] = { 32, 152, surfaces[8]->w, surfaces[8]->h };
+
+	surfaces[9] = TTF_RenderText_Solid(gFontMed, "Button B (X key): Fire Gun", color);
+	textures[9] = SDL_CreateTextureFromSurface(gRenderer, surfaces[9]);
+	rects[9] = { 32, 160, surfaces[9]->w, surfaces[9]->h };
+
+	surfaces[11] = TTF_RenderText_Solid(gFontMed, "Button SELECT (Q key): Use Vital Moon", color);
+	textures[11] = SDL_CreateTextureFromSurface(gRenderer, surfaces[11]);
+	rects[11] = { 32, 168, surfaces[11]->w, surfaces[11]->h };
+
+	surfaces[12] = TTF_RenderText_Solid(gFontMed, "Button START (W key): Pause Game", color);
+	textures[12] = SDL_CreateTextureFromSurface(gRenderer, surfaces[12]);
+	rects[12] = { 32, 176, surfaces[12]->w, surfaces[12]->h };
+
+	surfaces[13] = TTF_RenderText_Solid(gFontMed, "Press START (W key) to begin playing", color);
+	textures[13] = SDL_CreateTextureFromSurface(gRenderer, surfaces[13]);
+	rects[13] = { 96, 200, surfaces[13]->w, surfaces[13]->h };
+
 
 	SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0x00);
 	SDL_RenderClear(gRenderer);
 	SDL_SetRenderDrawColor(gRenderer, 0xFF, 0x00, 0x00, 0xFF);
-	//SDL_RenderFillRect(gRenderer, &gameOverRect);
-	SDL_RenderCopy(gRenderer, textureTitle, NULL, &titleRect);
-	//SDL_RenderFillRect(gRenderer, &pressStartRect);
-	SDL_RenderCopy(gRenderer, texturePressStart, NULL, &pressStartRect);
-	SDL_RenderCopy(gRenderer, texturePressSelect, NULL, &pressSelectRect);
+
+	for (i = 0; i < 14; i++)
+	{
+		SDL_RenderCopy(gRenderer, textures[i], NULL, &rects[i]);
+	}
+
 	SDL_RenderPresent(gRenderer);
 
 	//While application is running
@@ -972,10 +1066,12 @@ void creditsScreen(bool* quit)
 			break;
 		}
 	}
-	SDL_DestroyTexture(textureTitle);
-	SDL_DestroyTexture(texturePressStart);
-	SDL_FreeSurface(surfacePressStart);
-	SDL_FreeSurface(surfaceTitle);
+	for (i = 0; i < 14; i++)
+	{
+		SDL_DestroyTexture(textures[i]);
+		SDL_FreeSurface(surfaces[i]);
+	}
+
 }
 
 void tutorialScreen(bool* quit)
