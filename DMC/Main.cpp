@@ -1054,9 +1054,9 @@ void creditsScreen(bool* quit)
 	textures[4] = SDL_CreateTextureFromSurface(gRenderer, surfaces[4]);
 	rects[4] = { 97, 144, surfaces[4]->w, surfaces[4]->h };
 
-	surfaces[5] = TTF_RenderText_Solid(gFontMed, "Press START (W key) to begin playing", color);
+	surfaces[5] = TTF_RenderText_Solid(gFontMed, "Press START (W key) to return", color);
 	textures[5] = SDL_CreateTextureFromSurface(gRenderer, surfaces[5]);
-	rects[5] = { 96, 200, surfaces[5]->w, surfaces[5]->h };
+	rects[5] = { 120, 200, surfaces[5]->w, surfaces[5]->h };
 
 
 	SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0x00);
