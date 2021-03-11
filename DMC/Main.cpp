@@ -757,15 +757,8 @@ int main(int argc, char* args[])
 				}
 
 				//printf("%f\n", deltaTime.getTime());
+				deltaTime.updateDT();
 				
-				if (deltaTime.getTime() >= 1.f / 63.f)
-				{
-					deltaTime.start();
-				}
-				else
-				{
-					printf("%f\n", deltaTime.getTime());
-				}
 
 				
 				

@@ -51,7 +51,7 @@ void Player::moveLeft(float deltaTime)
 {
 	if (rect.x > 0)
 	{
-		rect.x -= (int)(63.f * deltaTime) * speed;
+		rect.x -= (int)(59.f * deltaTime) * speed;
 		attackRect.x = rect.x - 18;
 		swordRect.x = attackRect.x;
 		if (state != MOVING_LEFT)
@@ -79,7 +79,7 @@ void Player::moveRight(float deltaTime)
 {
 	if (rect.x < 240)
 	{
-		rect.x += (int)(63.f * deltaTime) * speed;
+		rect.x += (int)(59.f * deltaTime) * speed;
 		attackRect.x = rect.x;
 		swordRect.x = rect.x + 24;
 		if (state != MOVING_RIGHT)

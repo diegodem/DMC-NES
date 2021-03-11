@@ -19,7 +19,7 @@ Projectile::Projectile(int x, int direction)
 }
 void Projectile::update(float deltaTime)
 {
-	rect.x += (int)(63.f * deltaTime) * speed;
+	rect.x += (int)(59.f * deltaTime) * speed;
 }
 Projectile *Projectile::getProjectile()
 {
