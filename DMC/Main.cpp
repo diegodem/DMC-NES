@@ -1,3 +1,6 @@
+// Code by Diego de Miguel (https://github.com/diegodem) - March 2021
+
+
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
@@ -68,7 +71,7 @@ Timer spawnTimer;
 
 int nextEnemy;
 
-int i, j;
+int i, j, score;
 
 SDL_Rect healthRect;
 SDL_Rect maxHealthRect;
