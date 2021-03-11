@@ -68,3 +68,8 @@ void Enemy::pushBack(int pixels, int direction)
 {
 	(direction == 1) ? rect.x += pixels : rect.x -= pixels;
 }
+
+int Enemy::getScore()
+{
+	return score;
+}

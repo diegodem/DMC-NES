@@ -18,13 +18,16 @@ public:
 	void takeDamage(int damage);
 	int getHealth();
 	void pushBack(int pixels, int direction);
+	int getScore();
 protected:
 	int speed = 1;
 	int health = 64;
+	int score = 10;
 private:
 	SDL_Rect rect;
 	Timer frameTimer;
 	int frames[2];
 	int currentFrame;
 	int direction;
+	
 };

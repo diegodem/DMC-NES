@@ -6,6 +6,7 @@
 Unnath::Unnath()
 {
 	startFrameTimer();
+	score = 15;
 	if (rand() % 2 == 0)
 	{
 		initializeRect(256, 160);

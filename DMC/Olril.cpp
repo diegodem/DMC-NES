@@ -6,6 +6,7 @@
 Olril::Olril()
 {
 	health = 128;
+	score = 20;
 	startFrameTimer();
 	if (rand() % 2 == 0)
 	{

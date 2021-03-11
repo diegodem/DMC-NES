@@ -79,6 +79,7 @@ SDL_Rect maxHealthRect;
 SDL_Rect backgroundRect;
 SDL_Rect moonRect;
 SDL_Rect ammoRect;
+SDL_Rect scoreRect;
 
 Mix_Chunk* gGunSound = NULL;
 Mix_Chunk* gSwordSound = NULL;
@@ -105,6 +106,8 @@ bool init()
 	moonRect = { 232, 200, 16, 16 };
 
 	ammoRect = { 8, 200, 48, 16 };
+
+	scoreRect = { 184, 12, 64, 16 };
 
 	//int randomEnemy = rand() % 10;
 
@@ -536,6 +539,7 @@ int main(int argc, char* args[])
 				//Play the music
 				Mix_PlayMusic(gMusic, -1);
 			}
+			score = 0;
 			while (!quit)
 			{
 				if (spawnTimer.getTime() >= nextEnemy)
@@ -639,6 +643,7 @@ int main(int argc, char* args[])
 								Mix_PlayChannel(-1, gHitSound, 0);
 								if (enemies[i].getHealth() <= 0)
 								{
+									score += enemies[i].getScore();
 									enemies.erase(enemies.begin() + i);
 									i--;
 								}
@@ -752,10 +757,28 @@ int main(int argc, char* args[])
 				SDL_Texture* textureAmmo = SDL_CreateTextureFromSurface(gRenderer, surfaceAmmo);
 				SDL_Rect ammoTextRect = { 12, 200, surfaceAmmo->w, surfaceAmmo->h };
 
+				SDL_SetRenderDrawColor(gRenderer, 0xeb, 0xeb, 0xeb, 0xFF);
+				SDL_RenderFillRect(gRenderer, &scoreRect);
+
+				SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xFF);
+				SDL_RenderDrawRect(gRenderer, &scoreRect);
+
 				SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0x00);
 				SDL_SetRenderDrawColor(gRenderer, 0xFF, 0x00, 0x00, 0xFF);
 				//SDL_RenderFillRect(gRenderer, &gameOverRect);
 				SDL_RenderCopy(gRenderer, textureAmmo, NULL, &ammoTextRect);
+
+
+				std::string scoreStr;
+				scoreStr.assign("Score: ");
+				scoreStr.append(std::to_string(score));
+
+				SDL_Surface* surfaceScore = TTF_RenderText_Solid(gFontMed, scoreStr.c_str(), color);
+				SDL_Texture* textureScore = SDL_CreateTextureFromSurface(gRenderer, surfaceScore);
+				SDL_Rect scoreTextRect = { 188, 12, surfaceScore->w, surfaceScore->h };
+
+				SDL_SetRenderDrawColor(gRenderer, 0xFF, 0x00, 0x00, 0xFF);
+				SDL_RenderCopy(gRenderer, textureScore, NULL, &scoreTextRect);
 
 				
 
@@ -794,6 +817,7 @@ int main(int argc, char* args[])
 						i--;
 						if (enemies[j].getHealth() <= 0)
 						{
+							score += enemies[j].getScore();
 							enemies.erase(enemies.begin() + j);
 						}
 					}
@@ -870,9 +894,20 @@ void gameOverScreen(bool *quit)
 	SDL_Texture* textureGameOver = SDL_CreateTextureFromSurface(gRenderer, surfaceGameOver);
 	SDL_Rect gameOverRect = { 106, 64, surfaceGameOver->w, surfaceGameOver->h };
 
+	std::string scoreStr;
+	scoreStr.assign("Score: ");
+	scoreStr.append(std::to_string(score));
+
+	SDL_Surface* surfaceScore = TTF_RenderText_Solid(gFontMed, scoreStr.c_str(), color);
+	SDL_Texture* textureScore = SDL_CreateTextureFromSurface(gRenderer, surfaceScore);
+	SDL_Rect scoreTextRect = { (256 - surfaceScore->w) / 2, 104, surfaceScore->w, surfaceScore->h };
+
+	SDL_SetRenderDrawColor(gRenderer, 0xFF, 0x00, 0x00, 0xFF);
+	SDL_RenderCopy(gRenderer, textureScore, NULL, &scoreTextRect);
+
 	SDL_Surface* surfacePressStart = TTF_RenderText_Solid(gFontMed, "Press START (W) to try again...", color);
 	SDL_Texture* texturePressStart = SDL_CreateTextureFromSurface(gRenderer, surfacePressStart);
-	SDL_Rect pressStartRect = { 64, 128, surfacePressStart->w, surfacePressStart->h };
+	SDL_Rect pressStartRect = { 64, 144, surfacePressStart->w, surfacePressStart->h };
 
 	SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0x00);
 	SDL_RenderClear(gRenderer);
@@ -880,6 +915,7 @@ void gameOverScreen(bool *quit)
 	//SDL_RenderFillRect(gRenderer, &gameOverRect);
 	SDL_RenderCopy(gRenderer, textureGameOver, NULL, &gameOverRect);
 	//SDL_RenderFillRect(gRenderer, &pressStartRect);
+	SDL_RenderCopy(gRenderer, textureScore, NULL, &scoreTextRect);
 	SDL_RenderCopy(gRenderer, texturePressStart, NULL, &pressStartRect);
 	SDL_RenderPresent(gRenderer);
 
@@ -920,6 +956,8 @@ void gameOverScreen(bool *quit)
 			nextEnemy = 3;
 
 			projectiles.clear();
+
+			score = 0;
 
 			Mix_PlayMusic(gMusic, -1);
 
