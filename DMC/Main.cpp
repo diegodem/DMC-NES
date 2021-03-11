@@ -519,7 +519,7 @@ int main(int argc, char* args[])
 			spawnTimer.start();
 			while (!quit)
 			{
-				/*if (spawnTimer.getTime() >= nextEnemy)
+				if (spawnTimer.getTime() >= nextEnemy)
 				{
 					int randomEnemy = rand() % 10;
 
@@ -538,7 +538,7 @@ int main(int argc, char* args[])
 					{
 						enemies.push_back(Unnath());
 					}
-				}*/
+				}
 				//Handle events on queue
 				while (SDL_PollEvent(&e) != 0)
 				{
@@ -755,10 +755,16 @@ int main(int argc, char* args[])
 						SDL_RenderCopy(gRenderer, gTexturePlayer[p1.getCurrentFrame()], NULL, p1.getRect());
 					}
 				}
+
+				//printf("%f\n", deltaTime.getTime());
 				
-				if (deltaTime.getTime() >= 1.f / 60.f)
+				if (deltaTime.getTime() >= 1.f / 63.f)
 				{
 					deltaTime.start();
+				}
+				else
+				{
+					printf("%f\n", deltaTime.getTime());
 				}
 
 				
