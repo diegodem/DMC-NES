@@ -28,6 +28,7 @@ public:
 	bool getCanShoot();
 	void heal();
 	void sideEffect();
+	int getAmmo();
 
 private:
 
@@ -53,5 +54,7 @@ private:
 	int immuneState;
 
 	bool canShoot;
+
+	int ammo;
 
 };
