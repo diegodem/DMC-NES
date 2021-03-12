@@ -780,6 +780,13 @@ int main(int argc, char* args[])
 				SDL_SetRenderDrawColor(gRenderer, 0xFF, 0x00, 0x00, 0xFF);
 				SDL_RenderCopy(gRenderer, textureScore, NULL, &scoreTextRect);
 
+
+				SDL_DestroyTexture(textureAmmo);
+				SDL_FreeSurface(surfaceAmmo);
+
+				SDL_DestroyTexture(textureScore);
+				SDL_FreeSurface(surfaceScore);
+
 				
 
 
@@ -821,6 +828,12 @@ int main(int argc, char* args[])
 							enemies.erase(enemies.begin() + j);
 						}
 					}
+
+					if (projectiles[i].getRect()->x > 256 && projectiles[i].getRect()->x < -16)
+					{
+						projectiles.erase(projectiles.begin() + i);
+						i--;
+					}
 				}
 				for (i = 0; i < enemies.size(); i++)
 				{
@@ -828,6 +841,11 @@ int main(int argc, char* args[])
 					SDL_RenderCopy(gRenderer, gTextureEnemies[enemies[i].getCurrentFrame()], NULL, enemies[i].getRect());
 					//SDL_SetRenderDrawColor(gRenderer, 0xFF, 0x00, 0x00, 0xFF);
 					//SDL_RenderFillRect(gRenderer, enemies[i].getRect());
+					if (enemies[i].getRect()->x > 256 && enemies[i].getRect()->x < -16)
+					{
+						enemies.erase(enemies.begin() + i);
+						i--;
+					}
 				}
 				if (p1.getImmunityState() < 2)
 				{
