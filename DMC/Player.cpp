@@ -51,55 +51,62 @@ void Player::update()
 
 void Player::moveLeft(float deltaTime)
 {
-	if (rect.x > 0)
+	if (state == STANDING_RIGHT || state == MOVING_RIGHT || state == STANDING_LEFT || state == MOVING_LEFT || state == AFTER_ATTACK_LEFT || state == AFTER_ATTACK_RIGHT)
 	{
-		rect.x -= (int)(59.f * deltaTime) * speed;
-		attackRect.x = rect.x - 18;
-		swordRect.x = attackRect.x;
-		if (state != MOVING_LEFT)
+		if (rect.x > 0)
 		{
-			state = MOVING_LEFT;
-			frameTimer.start();
-			currentFrame = 3;
+			rect.x -= (int)(59.f * deltaTime) * speed;
+			attackRect.x = rect.x - 18;
+			swordRect.x = attackRect.x;
+			if (state != MOVING_LEFT)
+			{
+				state = MOVING_LEFT;
+				frameTimer.start();
+				currentFrame = 3;
+			}
+			else if (frameTimer.getTime() > 0.2f)
+			{
+				frameTimer.start();
+				(currentFrame == 2) ? currentFrame = 3 : currentFrame = 2;
+			}
 		}
-		else if (frameTimer.getTime() > 0.2f)
+		else
 		{
-			frameTimer.start();
-			(currentFrame == 2) ? currentFrame = 3 : currentFrame = 2;
+			state = STANDING_LEFT;
+			currentFrame = 2;
 		}
 	}
-	else
-	{
-		state = STANDING_LEFT;
-		currentFrame = 2;
-	}
+	
 	
 
 }
 
 void Player::moveRight(float deltaTime)
 {
-	if (rect.x < 240)
+	if (state == STANDING_RIGHT || state == MOVING_RIGHT || state == STANDING_LEFT || state == MOVING_LEFT || state == AFTER_ATTACK_LEFT || state == AFTER_ATTACK_RIGHT)
 	{
-		rect.x += (int)(59.f * deltaTime) * speed;
-		attackRect.x = rect.x;
-		swordRect.x = rect.x + 24;
-		if (state != MOVING_RIGHT)
+		if (rect.x < 240)
 		{
-			state = MOVING_RIGHT;
-			frameTimer.start();
-			currentFrame = 1;
+			rect.x += (int)(59.f * deltaTime) * speed;
+			attackRect.x = rect.x;
+			swordRect.x = rect.x + 24;
+			if (state != MOVING_RIGHT)
+			{
+				state = MOVING_RIGHT;
+				frameTimer.start();
+				currentFrame = 1;
+			}
+			else if (frameTimer.getTime() > 0.2f)
+			{
+				frameTimer.start();
+				(currentFrame == 0) ? currentFrame = 1 : currentFrame = 0;
+			}
 		}
-		else if (frameTimer.getTime() > 0.2f)
+		else
 		{
-			frameTimer.start();
-			(currentFrame == 0) ? currentFrame = 1 : currentFrame = 0;
+			state = STANDING_RIGHT;
+			currentFrame = 0;
 		}
-	}
-	else
-	{
-		state = STANDING_RIGHT;
-		currentFrame = 0;
 	}
 }
 
