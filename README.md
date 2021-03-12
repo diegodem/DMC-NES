@@ -5,9 +5,8 @@ This game is done for the Retro Jam 2021. It is a reimagining and adaptation of 
 Attributions:
 Music: Tutorial (Spacejacked OST) by sawsquarenoise (http://rolemusic.sawsquarenoise.com/)
 
-Notes:
-
 All the assets, design and code were done by me within the timespan of the Game Jam, exceptuating the music.
+
 
 The game can be downloaded here from the releases section, or from here: https://diegodem.itch.io/demon-might-crow
 
