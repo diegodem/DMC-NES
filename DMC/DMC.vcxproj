@@ -85,6 +85,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>D:\Documentos\SDL Projects\lib\SDL2_mixer\include;D:\Documentos\SDL Projects\lib\SDL2_image\include;D:\Documentos\SDL Projects\lib\SDL2_ttf\include;D:\Documentos\SDL Projects\lib\SDL2\include;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\Documentos\SDL Projects\lib\SDL2_mixer\lib\x64;D:\Documentos\SDL Projects\lib\SDL2_image\lib\x64;D:\Documentos\SDL Projects\lib\SDL2_ttf\lib\x64;D:\Documentos\SDL Projects\lib\SDL2\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -138,10 +140,11 @@
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;SDL2_mixer.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
