@@ -61,7 +61,7 @@ SDL_Texture* gTextureBackground[5] = { 0 };
 
 Player p1;
 
-std::vector<Projectile> projectiles;
+std::vector<Projectile> projectiles = { Projectile(0, 0) };
 
 std::vector<Enemy> enemies;
 
@@ -125,6 +125,7 @@ bool init()
 	{
 		enemies.push_back(Unnath());
 	}*/
+
 
 
 	//Initialize SDL
