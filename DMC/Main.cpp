@@ -19,8 +19,8 @@
 #include "Olril.h"
 #include "Unnath.h"
 
-const int SCREEN_WIDTH = 1024;
-const int SCREEN_HEIGHT = 896;
+const int SCREEN_WIDTH = 872;
+const int SCREEN_HEIGHT = 763;
 
 const int RESOLUTION_WIDTH = 256;
 const int RESOLUTION_HEIGHT = 224;
@@ -137,7 +137,7 @@ bool init()
 	{
 	
 		//Create window
-		gWindow = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+		gWindow = SDL_CreateWindow("Demon Might Crow", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 		if (gWindow == NULL)
 		{
 			printf("Window could not be created! SDL Error: %s\n", SDL_GetError());
@@ -829,7 +829,7 @@ int main(int argc, char* args[])
 						}
 					}
 
-					if (projectiles[i].getRect()->x > 256 && projectiles[i].getRect()->x < -16)
+					if (projectiles[i].getRect()->x > 256 || projectiles[i].getRect()->x < -16)
 					{
 						projectiles.erase(projectiles.begin() + i);
 						i--;
@@ -841,7 +841,7 @@ int main(int argc, char* args[])
 					SDL_RenderCopy(gRenderer, gTextureEnemies[enemies[i].getCurrentFrame()], NULL, enemies[i].getRect());
 					//SDL_SetRenderDrawColor(gRenderer, 0xFF, 0x00, 0x00, 0xFF);
 					//SDL_RenderFillRect(gRenderer, enemies[i].getRect());
-					if (enemies[i].getRect()->x > 256 && enemies[i].getRect()->x < -16)
+					if (enemies[i].getRect()->x > 256 || enemies[i].getRect()->x < -16)
 					{
 						enemies.erase(enemies.begin() + i);
 						i--;
