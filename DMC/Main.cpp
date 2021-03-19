@@ -573,7 +573,7 @@ int main(int argc, char* args[])
 					}
 					else if (e.type == SDL_KEYDOWN)
 					{
-						if (e.key.keysym.sym == SDLK_q)
+						if (e.key.keysym.sym == SDLK_c)
 						{
 							p1.heal();
 							Mix_PlayChannel(-1, gHealSound, 0);
@@ -581,7 +581,7 @@ int main(int argc, char* args[])
 							healthRect.w = p1.getHealth();
 						}
 
-						else if (e.key.keysym.sym == SDLK_w)
+						else if (e.key.keysym.sym == SDLK_SPACE)
 						{
 							Mix_PauseMusic();
 							bool resume = false;
@@ -610,7 +610,7 @@ int main(int argc, char* args[])
 									}
 									else if (e.type == SDL_KEYDOWN)
 									{
-										if (e.key.keysym.sym == SDLK_w)
+										if (e.key.keysym.sym == SDLK_SPACE)
 										{
 											resume = true;
 										}
@@ -951,7 +951,7 @@ void gameOverScreen(bool *quit)
 			}
 			else if (e.type == SDL_KEYDOWN)
 			{
-				if (e.key.keysym.sym == SDLK_w)
+				if (e.key.keysym.sym == SDLK_SPACE)
 				{
 					restart = true;
 				}
@@ -1017,11 +1017,11 @@ void titleScreen(bool* quit)
 	SDL_Texture* textureTitle = SDL_CreateTextureFromSurface(gRenderer, surfaceTitle);
 	SDL_Rect titleRect = { 42, 64, surfaceTitle->w, surfaceTitle->h };
 
-	SDL_Surface* surfacePressStart = TTF_RenderText_Solid(gFontMed, "Press START (W) to play", color);
+	SDL_Surface* surfacePressStart = TTF_RenderText_Solid(gFontMed, "Press START (SPACE) to play", color);
 	SDL_Texture* texturePressStart = SDL_CreateTextureFromSurface(gRenderer, surfacePressStart);
-	SDL_Rect pressStartRect = { 78, 128, surfacePressStart->w, surfacePressStart->h };
+	SDL_Rect pressStartRect = { 68, 128, surfacePressStart->w, surfacePressStart->h };
 
-	SDL_Surface* surfacePressSelect = TTF_RenderText_Solid(gFontMed, "Press SELECT (Q) to see the credits", color);
+	SDL_Surface* surfacePressSelect = TTF_RenderText_Solid(gFontMed, "Press SELECT (C) to see the credits", color);
 	SDL_Texture* texturePressSelect = SDL_CreateTextureFromSurface(gRenderer, surfacePressSelect);
 	SDL_Rect pressSelectRect = { 53, 150, surfacePressSelect->w, surfacePressSelect->h };
 
@@ -1048,11 +1048,11 @@ void titleScreen(bool* quit)
 			}
 			else if (e.type == SDL_KEYDOWN)
 			{
-				if (e.key.keysym.sym == SDLK_w)
+				if (e.key.keysym.sym == SDLK_SPACE)
 				{
 					restart = true;
 				}
-				else if (e.key.keysym.sym == SDLK_q)
+				else if (e.key.keysym.sym == SDLK_c)
 				{
 					creditsScreen(quit);
 					SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0x00);
@@ -1114,9 +1114,9 @@ void creditsScreen(bool* quit)
 	textures[4] = SDL_CreateTextureFromSurface(gRenderer, surfaces[4]);
 	rects[4] = { 97, 144, surfaces[4]->w, surfaces[4]->h };
 
-	surfaces[5] = TTF_RenderText_Solid(gFontMed, "Press START (W key) to return", color);
+	surfaces[5] = TTF_RenderText_Solid(gFontMed, "Press START (SPACE key) to return", color);
 	textures[5] = SDL_CreateTextureFromSurface(gRenderer, surfaces[5]);
-	rects[5] = { 120, 200, surfaces[5]->w, surfaces[5]->h };
+	rects[5] = { 100, 200, surfaces[5]->w, surfaces[5]->h };
 
 
 	SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0x00);
@@ -1143,7 +1143,7 @@ void creditsScreen(bool* quit)
 			}
 			else if (e.type == SDL_KEYDOWN)
 			{
-				if (e.key.keysym.sym == SDLK_w)
+				if (e.key.keysym.sym == SDLK_SPACE)
 				{
 					restart = true;
 				}
@@ -1222,17 +1222,17 @@ void tutorialScreen(bool* quit)
 	textures[9] = SDL_CreateTextureFromSurface(gRenderer, surfaces[9]);
 	rects[9] = { 32, 160, surfaces[9]->w, surfaces[9]->h };
 
-	surfaces[11] = TTF_RenderText_Solid(gFontMed, "Button SELECT (Q key): Use Vital Moon", color);
+	surfaces[11] = TTF_RenderText_Solid(gFontMed, "Button SELECT (C key): Use Vital Moon", color);
 	textures[11] = SDL_CreateTextureFromSurface(gRenderer, surfaces[11]);
 	rects[11] = { 32, 168, surfaces[11]->w, surfaces[11]->h };
 
-	surfaces[12] = TTF_RenderText_Solid(gFontMed, "Button START (W key): Pause Game", color);
+	surfaces[12] = TTF_RenderText_Solid(gFontMed, "Button START (SPACE key): Pause Game", color);
 	textures[12] = SDL_CreateTextureFromSurface(gRenderer, surfaces[12]);
 	rects[12] = { 32, 176, surfaces[12]->w, surfaces[12]->h };
 
-	surfaces[13] = TTF_RenderText_Solid(gFontMed, "Press START (W key) to begin playing", color);
+	surfaces[13] = TTF_RenderText_Solid(gFontMed, "Press START (SPACE key) to begin playing", color);
 	textures[13] = SDL_CreateTextureFromSurface(gRenderer, surfaces[13]);
-	rects[13] = { 96, 200, surfaces[13]->w, surfaces[13]->h };
+	rects[13] = { 80, 200, surfaces[13]->w, surfaces[13]->h };
 
 
 	SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0x00);
@@ -1259,7 +1259,7 @@ void tutorialScreen(bool* quit)
 			}
 			else if (e.type == SDL_KEYDOWN)
 			{
-				if (e.key.keysym.sym == SDLK_w)
+				if (e.key.keysym.sym == SDLK_SPACE)
 				{
 					restart = true;
 				}
